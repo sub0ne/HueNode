@@ -11,6 +11,13 @@ class UPnPServer {
         this._socket = null;
     }
 
+    stopListening() {
+        if (this._socket) {
+            Logger.getLogger().info(`[UPnPServer] Stopped listening`);
+            this._socket.close();
+        }
+    }
+
     async startListening() {
 
         this._socket = dgram.createSocket('udp4');
@@ -60,7 +67,7 @@ class UPnPServer {
         });
 
         this._socket.bind(port, () => {
-            Logger.getLogger().info(`[UPnPServer] UPnP Server listening to ${multicastAddress}:${port}`);
+            Logger.getLogger().info(`[UPnPServer] Listening to ${multicastAddress}:${port}`);
             this._socket.addMembership('239.255.255.250');
           });        
 

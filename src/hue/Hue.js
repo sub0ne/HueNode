@@ -4,16 +4,24 @@ const Logger = require('../Logger.js');
 class Hue {
 
     constructor() {
+        this._express = null;
         this._server = null;
+    }
+
+    stopHue() {
+        if (this._server) {
+            this._server.close();
+            Logger.getLogger().info(`[Hue Emulator] Stopped`);
+        }
     }
 
     startHue() {
 
-        this._server = express();
+        this._express = express();
 
         Logger.getLogger().info(`[Hue Emulator] Starting`);
 
-        this._server.get('/*', (req, res) => {
+        this._express.get('/*', (req, res) => {
 
             Logger.getLogger().info(`[Hue Emulator] HTTP-Request (GET) received: ${req.url}`);
 
@@ -136,7 +144,7 @@ class Hue {
         });
 
 
-        this._server.post('/*', (req, res) => {
+        this._express.post('/*', (req, res) => {
 
             console.log(req.url);
 
@@ -165,7 +173,7 @@ class Hue {
         });
 
 
-        this._server.put('/*', (req, res) => {
+        this._express.put('/*', (req, res) => {
 
             console.log(req.url);
 
@@ -196,7 +204,7 @@ class Hue {
         });
 
         Logger.getLogger().info(`[Hue Emulator] Listening on port 80`);
-        this._server.listen(80);
+        this._server = this._express.listen(80);
     }
 
 }
