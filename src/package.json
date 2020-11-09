@@ -1,0 +1,16 @@
+{
+  "name": "huenode",
+  "version": "1.0.0",
+  "description": "Hue emulation with Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dgram": "^1.0.1",
+    "express": "^4.17.1",
+    "winston": "^3.3.3"
+  }
+}

@@ -1,0 +1,39 @@
+const winston = require('winston')
+
+class Logger {
+
+    static _logger;
+
+    static getLogger(logLevel) {
+
+        if (!Logger._logger) {
+            Logger._initializeLogger(logLevel);
+        }
+
+        return Logger._logger;
+
+    }
+
+    static _initializeLogger(logLevel) {
+        if (!Logger._logger) {
+            this._logger = winston.createLogger({
+                level: logLevel || 'info',
+                format: winston.format.combine(
+                    winston.format.label({ label: '[HueNode]' }),
+                    winston.format.timestamp({
+                        format: 'YYYY-MM-DD HH:mm:ss'
+                    }),
+                    winston.format.json(),
+                    winston.format.printf(info => `${info.label} ${info.timestamp}: ${info.level} - ${info.message}`)
+                ),
+                transports: [
+                    new winston.transports.Console(),
+                    new winston.transports.File({ filename: 'HueNode.log' })
+                ]
+            });
+        }
+    }
+
+}
+
+module.exports = Logger;
