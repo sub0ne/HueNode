@@ -1,4 +1,4 @@
-const Hue = require('./hue/Hue.js');
+const Hue = require('./hue/emulator/Hue.js');
 const UPnPServer = require('./upnp/UPnPServer.js');
 
 const hue = new Hue();
