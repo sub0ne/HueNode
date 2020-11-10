@@ -1,4 +1,5 @@
 const Logger = require('../../Logger.js');
+const HueConfiguration = require('../configuration/HueConfiguration.js');
 
 let state = false;
 
@@ -7,37 +8,9 @@ const handleGet = (request, response) => {
     Logger.getLogger().info(`[Hue Emulator] HTTP-Request (GET) received: ${request.url}`);    
 
     if (request.url === '/description.xml') {
-
-        const responseData = '<?xml version="1.0" encoding="UTF-8"?>' + 
-        '<root>' +
-            '<specVersion>' +
-                '<major>1</major>' +
-                '<minor>0</minor>' +
-            '</specVersion>' +
-            '<URLBase>http://192.168.178.34:80/</URLBase>' +
-            '<device>' +
-                '<deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>' +
-                '<friendlyName>Philips hue (192.168.178.34)</friendlyName>' +
-                '<manufacturer>Signify</manufacturer>' +
-                '<manufacturerURL>http://www.philips-hue.com</manufacturerURL>' +
-                '<modelDescription>Philips hue Personal Wireless Lighting</modelDescription>' +
-                '<modelName>Philips hue bridge 2015</modelName>' +
-                '<modelNumber>BSB002</modelNumber>' +
-                '<modelURL>http://www.philips-hue.com</modelURL>' +
-                '<serialNumber>001f80007bbe</serialNumber>' +
-                '<UDN>uuid:2fa00080-d000-11e1-9b23-001f80007bbe</UDN>' +
-                '<presentationURL>index.html</presentationURL>' +
-                '<iconList>' +
-                    '<icon>' +
-                        '<mimetype>image/png</mimetype>' +
-                        '<height>48</height>' +
-                        '<width>48</width>' +
-                        '<depth>24</depth>' +
-                        '<url>hue_logo_0.png</url>' +
-                    '</icon>' +
-                '</iconList>' +
-            '</device>' +
-        '</root>';
+        
+        const hueConfiguration = new HueConfiguration();
+        const responseData = hueConfiguration.getHueBridgeDescription();
 
         response.status(200);
         response.type('application/xml');

@@ -1,4 +1,5 @@
-const winston = require('winston')
+const winston = require('winston');
+var path = require('path');
 
 class Logger {
 
@@ -28,7 +29,7 @@ class Logger {
                 ),
                 transports: [
                     new winston.transports.Console(),
-                    new winston.transports.File({ filename: 'HueNode.log' })
+                    new winston.transports.File({ filename: path.join(__dirname, 'HueNode.log') })
                 ]
             });
         }

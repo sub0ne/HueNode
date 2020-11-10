@@ -19,7 +19,7 @@ class Hue {
     }
 
     startHue() {
-
+        
         this._express = express();
 
         Logger.getLogger().info(`[Hue Emulator] Starting`);
