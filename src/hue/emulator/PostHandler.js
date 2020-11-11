@@ -4,26 +4,20 @@ const handlePost = (request, response) => {
 
     Logger.getLogger().info(`[Hue Emulator] HTTP-Request (POST) received: ${request.url}`);    
 
-    switch (request.url) {
-
-        case '/api':
-
-            const response = [
-                {
-                    "success": {
-                        "username": "burgestrand"
-                    }
+    if (request.url === '/api'|| request.url === '/api/') {
+ 
+        const responseData = [
+            {
+                "success": {
+                    "username": "burgestrand"
                 }
-            ];
+            }
+        ];
 
-            response.status(200);
-            response.type('application/json');
-            response.send(response);
-
-            break;
-
-        default:
-            break;
+        response.status(200);
+        response.type('application/json');
+        response.send(responseData);   
+            
     }
 
 }

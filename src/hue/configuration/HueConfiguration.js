@@ -1,9 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const moment = require('moment');
 const Logger = require('../../Logger.js');
 const { v4: uuidv4 } = require('uuid');
 
 const HUE_BRIDGE_TEMPLATE_FILE = "HueBridgeTemplate.xml";
+const NOUSER_CONFIG_FILE = "nouser_config_template.json";
 const APP_ROOT = path.dirname(require.main.filename);
 const DATA_FOLDER = "data";
 const HUE_CONFIGURATION_FILE = "Configuration.json";
@@ -19,6 +21,9 @@ class HueConfiguration {
 
         template = template.replace('{uuid}', this.getUUID());
         template = template.replace('{serialNumber}', this.getSerialNumber());
+        template = template.replace('{ipAddress}', this.getIPAddress()); // TODO: replace all
+        template = template.replace('{ipAddress}', this.getIPAddress());
+        template = template.replace('{modelID}', this.getModelID);
 
         return template;
     }
@@ -92,6 +97,56 @@ class HueConfiguration {
 
     getSerialNumber() {
         return this._getConfiguration().serialNumber;
+    }
+
+    getBridgeID() {
+        const serialNumber = this.getSerialNumber();
+        const bridgeID = serialNumber.substring(0, 6) + "FFFE" + serialNumber.substring(6);
+        return bridgeID.toUpperCase();
+    }
+
+    getMacAddress() {
+        const serialNumber = this.getSerialNumber();
+        const macAddress = `${serialNumber.substring(0,2)}:${serialNumber.substring(2,4)}:${serialNumber.substring(4,6)}:${serialNumber.substring(6,8)}:${serialNumber.substring(8,10)}:${serialNumber.substring(10,12)}`;
+        return macAddress.toUpperCase();
+    }
+
+    getIPAddress() {
+        return "192.168.178.34";
+    }
+
+    getTime() {
+        return {
+            localTime: moment().format('YYYY-MM-DTHH:mm:ss'),
+            utcTime: moment().utc().format('YYYY-MM-DTHH:mm:ss'),
+            timeZone: 'Europe/Berlin'
+        }
+    }
+
+    getNoUserConfig() {
+        Logger.getLogger().info(`[Hue Configuration] Loading nouser config template: ${this._getNoUserConfigTemplatePath()}`);    
+        let template = fs.readFileSync(this._getNoUserConfigTemplatePath(), "utf8");
+ 
+        const time = this.getTime();
+
+        template = template.replace('{ipAddress}', this.getIPAddress());
+        template = template.replace('{ipAddress}', this.getIPAddress());
+        template = template.replace('{macAddress}', this.getMacAddress());        
+        template = template.replace('{bridgeID}', this.getBridgeID());
+        template = template.replace('{utcTime}', time.utcTime);
+        template = template.replace('{localTime}', time.localTime);
+        template = template.replace('{timeZone}', this.timeZone);
+        template = template.replace('{modelID}', this.getModelID);
+
+        return template;
+    }
+
+    _getNoUserConfigTemplatePath() { 
+        return path.join(__dirname, NOUSER_CONFIG_FILE);
+    }
+
+    getModelID(){
+        return "BSB002";
     }
 
 }

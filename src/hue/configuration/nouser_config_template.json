@@ -1,0 +1,43 @@
+{
+    "portalservices":false,
+    "gateway":"{ipAddress}",
+    "mac":"{macAddress}",
+    "swversion":"9999999999",
+    "apiversion":"1.19.0",
+    "linkbutton":false,
+    "ipaddress":"{ipAddress}",
+    "proxyport":0,
+    "swupdate":{
+       "updatestate":0,
+       "checkforupdate":false,
+       "devicetypes":{
+          
+       },
+       "text":"",
+       "notify":false,
+       "url":""
+    },
+    "netmask":"255.255.255.0",
+    "name":"My cool hue",
+    "dhcp":true,
+    "UTC":"{utcTime}",
+    "proxyaddress":"none",
+    "localtime":"{localTime}",
+    "timezone":"{timeZone}",
+    "zigbeechannel":"6",
+    "modelid":"{modelID}",
+    "bridgeid":"{bridgeID}",
+    "factorynew":false,
+    "whitelist":{
+      "nouser":{
+         "lastUseDate":"2020-11-11T21:03:23",
+         "createDate":"2020-11-11T21:03:23",
+         "name":"auto insert user"
+      },
+      "burgestrand":{
+         "lastUseDate":"2020-11-11T21:02:51",
+         "createDate":"2020-11-11T21:02:51",
+         "name":"test_ha_bridge#127.0.0.1"
+      }
+    }
+ }

@@ -16,6 +16,34 @@ const handleGet = (request, response) => {
         response.type('application/xml');
         response.send(responseData);
 
+    } else if (request.url.endsWith('/api/nouser/config')) {
+
+        const hueConfiguration = new HueConfiguration();
+        const responseData = hueConfiguration.getNoUserConfig();
+
+        response.status(200);
+        response.type('application/json');
+        response.send(responseData);  
+        
+    } else if (request.url.endsWith('/api/burgestrand')) { // TODO user specific parsing
+
+        const hueConfiguration = new HueConfiguration();
+
+        const responseData = {
+            lights: {},
+            scenes: {},
+            groups: {},
+            schedules: {},
+            sensors: {},
+            rules: {}
+        }
+
+        responseData. config = JSON.parse(hueConfiguration.getNoUserConfig());
+
+        response.status(200);
+        response.type('application/json');
+        response.send(responseData);  
+
     } else if (request.url.endsWith('/lights')) {
 
         const responseData = {
@@ -94,6 +122,9 @@ const handleGet = (request, response) => {
         response.status(200);
         response.type('application/json');
         response.send(responseData);
+
+    } else {
+        Logger.getLogger().info(`[Hue Emulator] No handler found for HTTP-Request (GET): ${request.url}`);    
     }
 
 }
