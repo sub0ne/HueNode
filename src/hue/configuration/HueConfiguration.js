@@ -4,8 +4,8 @@ const moment = require('moment');
 const Logger = require('../../Logger.js');
 const { v4: uuidv4 } = require('uuid');
 
-const HUE_BRIDGE_TEMPLATE_FILE = "HueBridgeTemplate.xml";
-const NOUSER_CONFIG_FILE = "nouser_config_template.json";
+const HUE_BRIDGE_TEMPLATE_FILE = "HueBridge.xml";
+const NOUSER_CONFIG_FILE = "nouser_config.json";
 const APP_ROOT = path.dirname(require.main.filename);
 const DATA_FOLDER = "data";
 const HUE_CONFIGURATION_FILE = "Configuration.json";
@@ -88,7 +88,7 @@ class HueConfiguration {
     }
 
     _getHueBridgeTemplatePath() {
-        return path.join(__dirname, HUE_BRIDGE_TEMPLATE_FILE);
+        return path.join(APP_ROOT, "templates", HUE_BRIDGE_TEMPLATE_FILE);
     }
 
     getUUID(){
@@ -142,7 +142,7 @@ class HueConfiguration {
     }
 
     _getNoUserConfigTemplatePath() { 
-        return path.join(__dirname, NOUSER_CONFIG_FILE);
+        return path.join(APP_ROOT, "templates", NOUSER_CONFIG_FILE);
     }
 
     getModelID(){

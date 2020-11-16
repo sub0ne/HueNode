@@ -5,9 +5,10 @@ const Logger = require('../Logger.js');
 const SSDPParser = require('./SSDPParser.js');
 const HueConfiguration = require('../hue/configuration/HueConfiguration');
 
+const APP_ROOT = path.dirname(require.main.filename);
 const MULTICAST_ADDRESS = "239.255.255.250";
 const PORT = 1900;
-const UPNP_RESPONSE_TEMPLATE_FILE = "UPnPResponseTemplate";
+const UPNP_RESPONSE_TEMPLATE_FILE = "UPnPResponse";
 
 class UPnPServer {
 
@@ -72,7 +73,7 @@ class UPnPServer {
     }
 
     _getUPnPResponseTemplatePath() {
-        return path.join(__dirname, UPNP_RESPONSE_TEMPLATE_FILE);
+        return path.join(APP_ROOT, "templates", UPNP_RESPONSE_TEMPLATE_FILE);
     }
 
     _getUPnPResponse() {
