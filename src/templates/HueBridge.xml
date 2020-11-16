@@ -6,7 +6,7 @@
     <URLBase>http://{ipAddress}:80/</URLBase>
     <device>
         <deviceType>urn:schemas-upnp-org:device:Basic:1</deviceType>
-        <friendlyName>Philips hue ({ipAddress})</friendlyName>
+        <friendlyName>Philips HueNode Hue ({ipAddress})</friendlyName>
         <manufacturer>Signify</manufacturer>
         <manufacturerURL>http://www.philips-hue.com</manufacturerURL>
         <modelDescription>Philips hue Personal Wireless Lighting</modelDescription>
