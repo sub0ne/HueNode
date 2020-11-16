@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const Logger = require('../../Logger.js');
 const { v4: uuidv4 } = require('uuid');
 
 const HUE_BRIDGE_TEMPLATE_FILE = "HueBridge.xml";
@@ -16,7 +15,7 @@ class HueConfiguration {
     }
 
     getHueBridgeDescription() {
-        Logger.getLogger().info(`[Hue Configuration] Loading hue bridge template: ${this._getHueBridgeTemplatePath()}`);    
+        global.getHueNodeService().getLogger().info(`[Hue Configuration] Loading hue bridge template: ${this._getHueBridgeTemplatePath()}`);    
         let template = fs.readFileSync(this._getHueBridgeTemplatePath(), "utf8");
 
         template = template.replace('{uuid}', this.getUUID());
@@ -33,7 +32,7 @@ class HueConfiguration {
         if (!this._configuration) {
 
             if (!fs.existsSync(this._getDataFolderPath())) {
-                Logger.getLogger().info(`[Hue Configuration] Create folder 'data'`);
+                global.getHueNodeService().getLogger().info(`[Hue Configuration] Create folder 'data'`);
                 fs.mkdirSync(this._getDataFolderPath());
             }
 
@@ -50,14 +49,14 @@ class HueConfiguration {
     }
 
     _loadConfiguration() {
-        Logger.getLogger().info(`[Hue Configuration] Loading configuration file: ${this._getConfigurationFilePath()}`);    
+        global.getHueNodeService().getLogger().info(`[Hue Configuration] Loading configuration file: ${this._getConfigurationFilePath()}`);    
 
         this._configuration = JSON.parse(fs.readFileSync(this._getConfigurationFilePath()));
 
     }
 
     _saveConfiguration() {
-        Logger.getLogger().info(`[Hue Configuration] Save configuration file: ${this._getConfigurationFilePath()}`);
+        global.getHueNodeService().getLogger().info(`[Hue Configuration] Save configuration file: ${this._getConfigurationFilePath()}`);
 
         const data = new Uint8Array(Buffer.from(JSON.stringify(this._configuration, null, 1)));
         
@@ -67,7 +66,7 @@ class HueConfiguration {
 
     _setupNewConfiguration() {
 
-        Logger.getLogger().info(`[Hue Configuration] Create new hue configuration`);    
+        global.getHueNodeService().getLogger().info(`[Hue Configuration] Create new hue configuration`);    
 
         const uuid = uuidv4();;
         const serialNumber = uuid.split('-')[4];
@@ -124,7 +123,7 @@ class HueConfiguration {
     }
 
     getNoUserConfig() {
-        Logger.getLogger().info(`[Hue Configuration] Loading nouser config template: ${this._getNoUserConfigTemplatePath()}`);    
+        global.getHueNodeService().getLogger().info(`[Hue Configuration] Loading nouser config template: ${this._getNoUserConfigTemplatePath()}`);    
         let template = fs.readFileSync(this._getNoUserConfigTemplatePath(), "utf8");
  
         const time = this.getTime();

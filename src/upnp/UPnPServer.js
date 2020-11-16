@@ -1,9 +1,7 @@
 const dgram = require('dgram');
 const fs = require ('fs');
 const path = require ('path');
-const Logger = require('../Logger.js');
 const SSDPParser = require('./SSDPParser.js');
-const HueConfiguration = require('../hue/configuration/HueConfiguration');
 
 const APP_ROOT = path.dirname(require.main.filename);
 const MULTICAST_ADDRESS = "239.255.255.250";
@@ -18,7 +16,7 @@ class UPnPServer {
 
     stopListening() {
         if (this._socket) {
-            Logger.getLogger().info(`[UPnPServer] Stopped listening`);
+            global.getHueNodeService().getLogger().info(`[UPnPServer] Stopped listening`);
             this._socket.close();
         }
     }
@@ -36,12 +34,12 @@ class UPnPServer {
                 strMessage.includes('MAN: "ssdp:discover"') &&
                 strMessage.includes('ST: ssdp:all')) {
 
-                Logger.getLogger().info(`[UPnPServer] SSDP request received: ${strMessage}`);
+                global.getHueNodeService().getLogger().info(`[UPnPServer] SSDP request received: ${strMessage}`);
 
                 const ssdpParser = new SSDPParser(strMessage);
                 const mxValue = ssdpParser.getMX() || 0;
 
-                Logger.getLogger().info(`[UPnPServer] Received MX value: ${mxValue}`);
+                global.getHueNodeService().getLogger().info(`[UPnPServer] Received MX value: ${mxValue}`);
 
                 const strResponse = this._getUPnPResponse();
 
@@ -56,7 +54,7 @@ class UPnPServer {
                         requestInfo.port,
                         requestInfo.address,
                         (error, byteLength) => {                        
-                            Logger.getLogger().info(`[UPnPServer] Sent response to ${requestInfo.address}:${requestInfo.port}`);                        
+                            global.getHueNodeService().getLogger().info(`[UPnPServer] Sent response to ${requestInfo.address}:${requestInfo.port}`);                        
                         }
                     );
                 }, mxTimeout);
@@ -66,7 +64,7 @@ class UPnPServer {
         });
 
         this._socket.bind(PORT, () => {
-            Logger.getLogger().info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
+            global.getHueNodeService().getLogger().info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
             this._socket.addMembership(MULTICAST_ADDRESS);
           });        
 
@@ -77,7 +75,9 @@ class UPnPServer {
     }
 
     _getUPnPResponse() {
-        const hueConfiguration = new HueConfiguration();
+        
+        const hueConfiguration = global.getHueNodeService().getHueConfiguration();
+
         let strResponse = fs.readFileSync(this._getUPnPResponseTemplatePath(), "utf8");
         return strResponse.replace('{uuid}', hueConfiguration.getUUID());
     }
