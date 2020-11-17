@@ -1,122 +1,48 @@
-let state = false;
+const Description = require('../api/Description.js');
+const Config = require('../api/Config.js');
+const URLParser = require('./URLParser.js');
 
 const handleGet = (request, response) => {
 
-    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (GET) received: ${request.url}`);    
-    
-    const hueConfiguration = global.getHueNodeService().getHueConfiguration();
+    const url = request.url;
 
-    if (request.url === '/description.xml') {
-                
-        const responseData = hueConfiguration.getHueBridgeDescription();
+    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (GET) received: ${url}`);    
+
+    if (URLParser.matchesPattern(url, "/description.xml")) {
+    
+        const responseData = Description.getDescription();
+
+        console.log(responseData);
 
         response.status(200);
         response.type('application/xml');
-        response.send(responseData);
+        response.send(responseData); 
 
-    } else if (request.url.endsWith('/api/nouser/config')) {
+    } else if (URLParser.matchesPattern(url, "/api/:username/config")) {
 
-        const responseData = hueConfiguration.getNoUserConfig();
+        const responseData = Config.getConfig();
 
         response.status(200);
         response.type('application/json');
         response.send(responseData);  
+
+    } else if (URLParser.matchesPattern(url,'/api/:username')) { 
         
-    } else if (request.url.endsWith('/api/burgestrand')) { // TODO user specific parsing
+        console.log("1");
+        const parameters = URLParser.getParameters(url, '/api/:username');
+        console.log(parameters);
 
-        const responseData = {
-            lights: {},
-            scenes: {},
-            groups: {},
-            schedules: {},
-            sensors: {},
-            rules: {}
-        }
+    } else if (URLParser.matchesPattern(url,'/api/:username/lights')) {
 
-        responseData. config = JSON.parse(hueConfiguration.getNoUserConfig());
+        console.log("2");
+        const parameters = URLParser.getParameters(url, '/api/:username/lights');
+        console.log(parameters);
 
-        response.status(200);
-        response.type('application/json');
-        response.send(responseData);  
+    } else if (URLParser.matchesPattern(url,'/api/:username/lights/:deviceID')) {
 
-    } else if (request.url.endsWith('/lights')) {
-
-        const responseData = {
-            2: {
-                "state": {
-                    "on": state,
-                    "alert": "select",
-                    "reachable": true
-                },
-                "swupdate": {
-                    "state": "notupdatable",
-                    "lastinstall": "2020-11-05T18:37:08"
-                },
-                "type": "Dimmable light",
-                "name": "On/Off plug 2",
-                "modelid": "SP 120",
-                "manufacturername": "innr",
-                "productname": "On/Off plug",
-                "capabilities": {
-                    "certified": false,
-                    "control": {
-                    },
-                    "streaming": {
-                        "renderer": false,
-                        "proxy": false
-                    }
-                },
-                "config": {
-                    "archetype": "classicbulb",
-                    "function": "functional",
-                    "direction": "omnidirectional"
-                },
-                "uniqueid": "00:15:8d:00:03:88:60:68-22",
-                "swversion": "2.0"
-            }
-        };
-
-        response.status(200);
-        response.type('application/json');
-        response.send(responseData);
-
-    } else if (request.url.endsWith('/lights/2')) {
-
-        const responseData = {
-            "state": {
-                "on": state,
-                "alert": "select",
-                "reachable": true
-            },
-            "swupdate": {
-                "state": "notupdatable",
-                "lastinstall": "2020-11-05T18:37:08"
-            },
-            "type": "Dimmable light",
-            "name": "On/Off plug 2",
-            "modelid": "SP 120",
-            "manufacturername": "innr",
-            "productname": "On/Off plug",
-            "capabilities": {
-                "certified": false,
-                "control": {},
-                "streaming": {
-                    "renderer": false,
-                    "proxy": false
-                }
-            },
-            "config": {
-                "archetype": "classicbulb",
-                "function": "functional",
-                "direction": "omnidirectional"
-            },
-            "uniqueid": "00:15:8d:00:03:88:60:68-22",
-            "swversion": "2.0"
-        };
-
-        response.status(200);
-        response.type('application/json');
-        response.send(responseData);
+        console.log("3");
+        const parameters = URLParser.getParameters(url, '/api/:username/lights/:deviceID');
+        console.log(parameters);
 
     } else {
         global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for HTTP-Request (GET): ${request.url}`);    
