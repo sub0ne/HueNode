@@ -6,10 +6,7 @@ let hueConfigInstance = undefined;
 class HueNodeService {
 
     constructor() {
-    }
-
-    getLogger() {
-        return Logger.getLogger();
+        this.Logger = Logger.getLogger();
     }
 
     getHueConfiguration() {

@@ -2,7 +2,7 @@ let state = false;
 
 const handleGet = (request, response) => {
 
-    global.getHueNodeService().getLogger().info(`[Hue Emulator] HTTP-Request (GET) received: ${request.url}`);    
+    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (GET) received: ${request.url}`);    
     
     const hueConfiguration = global.getHueNodeService().getHueConfiguration();
 
@@ -119,7 +119,7 @@ const handleGet = (request, response) => {
         response.send(responseData);
 
     } else {
-        global.getHueNodeService().getLogger().info(`[Hue Emulator] No handler found for HTTP-Request (GET): ${request.url}`);    
+        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for HTTP-Request (GET): ${request.url}`);    
     }
 
 }

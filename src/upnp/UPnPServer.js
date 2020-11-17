@@ -16,7 +16,7 @@ class UPnPServer {
 
     stopListening() {
         if (this._socket) {
-            global.getHueNodeService().getLogger().info(`[UPnPServer] Stopped listening`);
+            global.getHueNodeService().Logger.info(`[UPnPServer] Stopped listening`);
             this._socket.close();
         }
     }
@@ -34,12 +34,12 @@ class UPnPServer {
                 strMessage.includes('MAN: "ssdp:discover"') &&
                 strMessage.includes('ST: ssdp:all')) {
 
-                global.getHueNodeService().getLogger().info(`[UPnPServer] SSDP request received: ${strMessage}`);
+                global.getHueNodeService().Logger.info(`[UPnPServer] SSDP request received: ${strMessage}`);
 
                 const ssdpParser = new SSDPParser(strMessage);
                 const mxValue = ssdpParser.getMX() || 0;
 
-                global.getHueNodeService().getLogger().info(`[UPnPServer] Received MX value: ${mxValue}`);
+                global.getHueNodeService().Logger.info(`[UPnPServer] Received MX value: ${mxValue}`);
 
                 const strResponse = this._getUPnPResponse();
 
@@ -54,7 +54,7 @@ class UPnPServer {
                         requestInfo.port,
                         requestInfo.address,
                         (error, byteLength) => {                        
-                            global.getHueNodeService().getLogger().info(`[UPnPServer] Sent response to ${requestInfo.address}:${requestInfo.port}`);                        
+                            global.getHueNodeService().Logger.info(`[UPnPServer] Sent response to ${requestInfo.address}:${requestInfo.port}`);                        
                         }
                     );
                 }, mxTimeout);
@@ -64,7 +64,7 @@ class UPnPServer {
         });
 
         this._socket.bind(PORT, () => {
-            global.getHueNodeService().getLogger().info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
+            global.getHueNodeService().Logger.info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
             this._socket.addMembership(MULTICAST_ADDRESS);
           });        
 

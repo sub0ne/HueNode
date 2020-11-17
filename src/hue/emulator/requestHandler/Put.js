@@ -2,7 +2,7 @@ let state = false;
 
 const handlePut = (request, response) => {
 
-    global.getHueNodeService().getLogger().info(`[Hue Emulator] HTTP-Request (PUT) received: ${request.url}`);    
+    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (PUT) received: ${request.url}`);    
 
     switch (request.url) {
 

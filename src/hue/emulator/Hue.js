@@ -13,7 +13,7 @@ class Hue {
     stopHue() {
         if (this._server) {
             this._server.close();
-            global.getHueNodeService().getLogger().info(`[Hue Emulator] Stopped`);
+            global.getHueNodeService().Logger.info(`[Hue Emulator] Stopped`);
         }
     }
 
@@ -21,7 +21,7 @@ class Hue {
         
         this._express = express();
 
-        global.getHueNodeService().getLogger().info(`[Hue Emulator] Starting`);
+        global.getHueNodeService().Logger.info(`[Hue Emulator] Starting`);
 
         this._express.get('/*', (req, res) => getHandler.handleGet(req,res));
         this._express.post('/*', (req, res) => postHandler.handlePost(req,res));
@@ -29,7 +29,7 @@ class Hue {
 
         const port = global.getHueNodeService().getHueConfiguration().getDefaultPort();
 
-        global.getHueNodeService().getLogger().info(`[Hue Emulator] Listening on port ${port}`);
+        global.getHueNodeService().Logger.info(`[Hue Emulator] Listening on port ${port}`);
         this._server = this._express.listen(port);
 
     }

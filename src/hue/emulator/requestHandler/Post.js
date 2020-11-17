@@ -1,6 +1,6 @@
 const handlePost = (request, response) => {
 
-    global.getHueNodeService().getLogger().info(`[Hue Emulator] HTTP-Request (POST) received: ${request.url}`);    
+    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (POST) received: ${request.url}`);    
 
     if (request.url === '/api'|| request.url === '/api/') {
  
