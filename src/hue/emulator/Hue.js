@@ -1,7 +1,7 @@
 const express = require('express');
-const getHandler = require('./requestHandler/GetHandler.js');
-const putHandler = require('./requestHandler/PutHandler.js');
-const postHandler = require('./requestHandler/PostHandler.js');
+const getHandler = require('./requestHandler/Get.js');
+const putHandler = require('./requestHandler/Put.js');
+const postHandler = require('./requestHandler/Post.js');
 
 class Hue {
 
@@ -27,8 +27,10 @@ class Hue {
         this._express.post('/*', (req, res) => postHandler.handlePost(req,res));
         this._express.put('/*', (req, res) => putHandler.handlePut(req,res));
 
-        global.getHueNodeService().getLogger().info(`[Hue Emulator] Listening on port 80`);
-        this._server = this._express.listen(80);
+        const port = global.getHueNodeService().getHueConfiguration().getDefaultPort();
+
+        global.getHueNodeService().getLogger().info(`[Hue Emulator] Listening on port ${port}`);
+        this._server = this._express.listen(port);
 
     }
 

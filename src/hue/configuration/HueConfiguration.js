@@ -74,7 +74,8 @@ class HueConfiguration {
         this._configuration = {
             Name: 'HueNode Hue',
             uuid,
-            serialNumber
+            serialNumber,
+            defaultPort: 80
         }        
     }
 
@@ -146,6 +147,10 @@ class HueConfiguration {
 
     getModelID(){
         return "BSB002";
+    }
+
+    getDefaultPort() {
+        return this._getConfiguration().defaultPort;
     }
 
 }
