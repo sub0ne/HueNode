@@ -1,33 +1,39 @@
-let state = false;
+const URLParser = require('./URLParser.js');
+const Lights = require('../api/Lights.js');
+
+const PATTERN_LIGHT_STATE = "/api/:username/lights/:deviceID/state";
 
 const handlePut = (request, response) => {
 
-    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (PUT) received: ${request.url}`);    
+    const url = request.url;
 
-    switch (request.url) {
+    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (PUT) received: ${url}`);    
 
-        case '/api/burgestrand/lights/2/state':
+    if (URLParser.matchesPattern(url,PATTERN_LIGHT_STATE)) {
 
-            state = !state;
+        const parameters = URLParser.getParameters(url, PATTERN_LIGHT_STATE);
+        const deviceID = parameters["deviceID"];
 
-            const response = [
-                {
-                    "success": {
-                        "/lights/2/state/on": state
-                    }
-                }
-            ];
+        const states = request.body;
 
-            response.status(200);
-            response.type('application/json');
-            response.send(response);
+        global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (PUT) HTTP-Request body received state changes:'`);
+        Object.keys(states).forEach(parameter => {
+            global.getHueNodeService().Logger.info(`[Hue Emulator] '${parameter}' --> '${states[parameter]}'`);
+        });
 
-            break;
+        const responseData = Lights.setState(deviceID, states);
+    
+        response.status(200);
+        response.type('application/json');
+        response.send(responseData);
 
-        default:
-            break;
+    } else {
+        
+        response.status(404);
+        response.send();
+
+        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for HTTP-Request (PUT): ${url}`);    
     }
-
 
 }
 

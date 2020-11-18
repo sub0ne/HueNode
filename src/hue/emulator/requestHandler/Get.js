@@ -1,6 +1,14 @@
 const Description = require('../api/Description.js');
 const Config = require('../api/Config.js');
+const Lights = require('../api/Lights.js');
+const Users = require('../api/Users.js');
 const URLParser = require('./URLParser.js');
+
+const PATTERN_DESCRIPTION = "/description.xml";
+const PATTERN_CONFIG = "/api/:username/config";
+const PATTERN_USERNAME = "/api/:username";
+const PATTERN_LIGHTS = "/api/:username/lights";
+const PATTERN_LIGHT = "/api/:username/lights/:deviceID";
 
 const handleGet = (request, response) => {
 
@@ -8,17 +16,15 @@ const handleGet = (request, response) => {
 
     global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (GET) received: ${url}`);    
 
-    if (URLParser.matchesPattern(url, "/description.xml")) {
+    if (URLParser.matchesPattern(url, PATTERN_DESCRIPTION)) {
     
         const responseData = Description.getDescription();
-
-        console.log(responseData);
 
         response.status(200);
         response.type('application/xml');
         response.send(responseData); 
 
-    } else if (URLParser.matchesPattern(url, "/api/:username/config")) {
+    } else if (URLParser.matchesPattern(url, PATTERN_CONFIG)) {
 
         const responseData = Config.getConfig();
 
@@ -26,25 +32,40 @@ const handleGet = (request, response) => {
         response.type('application/json');
         response.send(responseData);  
 
-    } else if (URLParser.matchesPattern(url,'/api/:username')) { 
-        
-        console.log("1");
-        const parameters = URLParser.getParameters(url, '/api/:username');
-        console.log(parameters);
+    } else if (URLParser.matchesPattern(url, PATTERN_USERNAME)) { 
 
-    } else if (URLParser.matchesPattern(url,'/api/:username/lights')) {
+        const parameters = URLParser.getParameters(url, PATTERN_USERNAME);
 
-        console.log("2");
-        const parameters = URLParser.getParameters(url, '/api/:username/lights');
-        console.log(parameters);
+        responseData. config = Users.getUserData();
 
-    } else if (URLParser.matchesPattern(url,'/api/:username/lights/:deviceID')) {
+        response.status(200);
+        response.type('application/json');
+        response.send(responseData);  
 
-        console.log("3");
-        const parameters = URLParser.getParameters(url, '/api/:username/lights/:deviceID');
-        console.log(parameters);
+    } else if (URLParser.matchesPattern(url, PATTERN_LIGHTS)) {
+
+        const reponseData = Lights.getLights();
+
+        response.status(200);
+        response.type('application/json');
+        response.send(responseData);
+
+    } else if (URLParser.matchesPattern(url, PATTERN_LIGHT)) {
+
+        const parameters = URLParser.getParameters(url, PATTERN_LIGHT);
+        const deviceID = parameters["deviceID"];
+
+        const responseData = Lights.getLight(deviceID);
+
+        response.status(200);
+        response.type('application/json');
+        response.send(responseData);
 
     } else {
+
+        response.status(404);
+        response.send();
+
         global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for HTTP-Request (GET): ${request.url}`);    
     }
 
