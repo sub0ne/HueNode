@@ -3,8 +3,7 @@ const HueServer = require ('./HueServer.js');
 class Hue {
 
     _hueServer = undefined;
-    _lights = [];
-    _scenes
+    _lights = {};
 
     constructor() {
     }
@@ -34,19 +33,11 @@ s
     }
 
     getLights() {
-
-        /*
-            lights: {
-                1: {...}
-                2: {...}
-            }  
-          
-         */
-
+        return this._lights;
     }
 
     getLight(deviceID) {
-        
+        return this._lights[deviceID];
     }
 
 }

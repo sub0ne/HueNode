@@ -45,7 +45,7 @@ const handleGet = (request, response) => {
 
     } else if (URLParser.matchesPattern(url, PATTERN_LIGHTS)) {
 
-        const reponseData = Lights.getLights();
+        const responseData = Lights.getLights();
 
         response.status(200);
         response.type('application/json');

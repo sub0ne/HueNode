@@ -1,5 +1,8 @@
 const { v4: uuidv4 } = require('uuid');
 const Config = require('./Config.js');
+const Lights = require('./Lights.js');
+const Sensors = require('./Sensors.js');
+const Groups = require('./Groups.js');
 
 class Users {
 
@@ -17,13 +20,13 @@ class Users {
     }
 
     static getUserData() {
-                
+
         const responseData = {
-            lights: {},
+            lights: Lights.getLights(),
             scenes: {},
-            groups: {},
+            groups: Groups.getGroups(),
             schedules: {},
-            sensors: {},
+            sensors: Sensors.getSensors(),
             rules: {}
         }
 
