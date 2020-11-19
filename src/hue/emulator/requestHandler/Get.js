@@ -16,6 +16,7 @@ const handleGet = (request, response) => {
 
     global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (GET) received: ${url}`);    
 
+    
     if (URLParser.matchesPattern(url, PATTERN_DESCRIPTION)) {
     
         const responseData = Description.getDescription();

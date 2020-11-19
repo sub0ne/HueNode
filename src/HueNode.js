@@ -1,15 +1,12 @@
-const Hue = require('./hue/emulator/Hue.js');
-const UPnPServer = require('./upnp/UPnPServer.js');
 const HueNodeService = require('./HueNodeService.js');
-
 
 const hueNodeService = new HueNodeService();
 global.getHueNodeService = () => {
     return hueNodeService;
 }
 
-const hue = new Hue();
-const upnpServer = new UPnPServer();
+const hue = hueNodeService.getHue();
+const upnpServer = hueNodeService.getUPnPServer();
 
 process.on('SIGINT', function() {
     upnpServer.stopListening();
@@ -19,7 +16,4 @@ process.on('SIGINT', function() {
 
 upnpServer.startListening();
 hue.startHue();
-
-
-
 
