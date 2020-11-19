@@ -9,7 +9,7 @@
         "lastinstall": "2020-11-05T18:37:08"
     },
     "type": "Dimmable light",
-    "name": "{name}",
+    "name": "On/Off plug 2",
     "modelid": "SP 120",
     "manufacturername": "innr",
     "productname": "On/Off plug",
@@ -26,6 +26,6 @@
         "function": "functional",
         "direction": "omnidirectional"
     },
-    "uniqueid": "{uniqueID}",
+    "uniqueid": "00:15:8d:00:03:88:60:68-22",
     "swversion": "2.0"
 }

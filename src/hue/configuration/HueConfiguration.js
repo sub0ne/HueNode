@@ -15,16 +15,20 @@ class HueConfiguration {
     }
 
     getHueBridgeDescription() {
-        global.getHueNodeService().Logger.info(`[Hue Configuration] Loading hue bridge template: ${this._getHueBridgeTemplatePath()}`);    
+
+        const hueNodeService = global.getHueNodeService();
+
+        hueNodeService.Logger.info(`[Hue Configuration] Loading hue bridge template: ${this._getHueBridgeTemplatePath()}`);
         let template = fs.readFileSync(this._getHueBridgeTemplatePath(), "utf8");
 
-        template = template.replace('{uuid}', this.getUUID());
-        template = template.replace('{serialNumber}', this.getSerialNumber());
-        template = template.replace('{ipAddress}', this.getIPAddress()); // TODO: replace all
-        template = template.replace('{ipAddress}', this.getIPAddress());
-        template = template.replace('{modelID}', this.getModelID);
+        const parameters = {
+            uuid: this.getUUID(),
+            serialNumber: this.getSerialNumber(),
+            ipAddress: this.getIPAddress(),
+            modelID: this.getModelID()
+        }
 
-        return template;
+        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);;
     }
 
     _getConfiguration() {
@@ -124,21 +128,25 @@ class HueConfiguration {
     }
 
     getNoUserConfig() {
-        global.getHueNodeService().Logger.info(`[Hue Configuration] Loading nouser config template: ${this._getNoUserConfigTemplatePath()}`);    
+
+        const hueNodeService = global.getHueNodeService();
+
+        hueNodeService.Logger.info(`[Hue Configuration] Loading nouser config template: ${this._getNoUserConfigTemplatePath()}`);            
         let template = fs.readFileSync(this._getNoUserConfigTemplatePath(), "utf8");
  
         const time = this.getTime();
 
-        template = template.replace('{ipAddress}', this.getIPAddress());
-        template = template.replace('{ipAddress}', this.getIPAddress());
-        template = template.replace('{macAddress}', this.getMacAddress());        
-        template = template.replace('{bridgeID}', this.getBridgeID());
-        template = template.replace('{utcTime}', time.utcTime);
-        template = template.replace('{localTime}', time.localTime);
-        template = template.replace('{timeZone}', this.timeZone);
-        template = template.replace('{modelID}', this.getModelID);
+        const parameters = {
+            ipAddress: this.getIPAddress(),
+            macAddress: this.getMacAddress(),
+            bridgeID: this.getBridgeID(),
+            utcTime: time.utcTime,
+            localTime: time.localTime,
+            timeZone: time.timeZone,
+            modelID: this.getModelID()
+        }
 
-        return template;
+        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
     }
 
     _getNoUserConfigTemplatePath() { 
