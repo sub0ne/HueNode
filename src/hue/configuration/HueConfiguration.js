@@ -28,7 +28,7 @@ class HueConfiguration {
             modelID: this.getModelID()
         }
 
-        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);;
+        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
     }
 
     _getConfiguration() {
@@ -110,9 +110,17 @@ class HueConfiguration {
     }
 
     getMacAddress() {
-        const serialNumber = this.getSerialNumber();
-        const macAddress = `${serialNumber.substring(0,2)}:${serialNumber.substring(2,4)}:${serialNumber.substring(4,6)}:${serialNumber.substring(6,8)}:${serialNumber.substring(8,10)}:${serialNumber.substring(10,12)}`;
-        return macAddress.toUpperCase();
+
+        const serialNumber = this.getSerialNumber().toUpperCase();
+
+        const keySegments = [];
+
+        for (let i = 0; i <= 5; i++) {
+            keySegments.push(serialNumber.substring(i*2, i*2 + 2));
+        }
+              
+        return keySegments.join(":");
+
     }
 
     getIPAddress() {

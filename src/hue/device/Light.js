@@ -1,8 +1,29 @@
 class Light {
+    
+    // States
+    _on = false;
 
-    _on = undefined;
+    constructor(parameters) {
+        this._deviceID = parameters.deviceID;
+        this._templateType = parameters.templateType;
+        this._name = parameters.name;
+        this._uniqueID = parameters.uniqueID;
+    }
 
-    constructor() {
+    getDeviceID() {
+        return this._deviceID;
+    }
+
+    getTemplateType() {
+        return this._templateType;
+    }
+
+    getName() {
+        return this._name;
+    }
+
+    getUniqueID() {
+        return this._uniqueID;
     }
 
     getStateOn() {

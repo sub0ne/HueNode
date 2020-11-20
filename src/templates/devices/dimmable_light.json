@@ -1,6 +1,6 @@
 {
     "state": {
-        "on": false,
+        "on": {on},
         "alert": "select",
         "reachable": true
     },

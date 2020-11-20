@@ -43,7 +43,7 @@ class HueServer {
     }
 
     isRunning() {
-        return this._server && this._server.listening();
+        return !!this._server;
     }
 
 }
