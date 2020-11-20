@@ -19,7 +19,7 @@ const handleGet = (request, response) => {
     
     if (URLParser.matchesPattern(url, PATTERN_DESCRIPTION)) {
     
-        const responseData = Description.getDescription();
+        const responseData = Description.getSerializedDescription();
 
         response.status(200);
         response.type('application/xml');
@@ -27,7 +27,7 @@ const handleGet = (request, response) => {
 
     } else if (URLParser.matchesPattern(url, PATTERN_CONFIG)) {
 
-        const responseData = Config.getConfig();
+        const responseData = Config.getJSONConfig();
 
         response.status(200);
         response.type('application/json');

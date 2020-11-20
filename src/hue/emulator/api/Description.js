@@ -1,7 +1,7 @@
 class Description {
 
-    static getDescription() {
-        return global.getHueNodeService().getHueConfiguration().getHueBridgeDescription();
+    static getSerializedDescription() {
+        return global.getHueNodeService().getHueConfiguration().getSerializedHueBridgeDescription();
     }
 
 }

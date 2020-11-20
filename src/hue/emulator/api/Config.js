@@ -1,7 +1,7 @@
 class Config {
 
-    static getConfig() {
-        return global.getHueNodeService().getHueConfiguration().getNoUserConfig();
+    static getJSONConfig() {
+        return JSON.parse(global.getHueNodeService().getHueConfiguration().getSerializedNoUserConfig());
     }
 
 }

@@ -14,7 +14,7 @@ class HueConfiguration {
     constructor() { 
     }
 
-    getHueBridgeDescription() {
+    getSerializedHueBridgeDescription() {
 
         const hueNodeService = global.getHueNodeService();
 
@@ -136,7 +136,7 @@ class HueConfiguration {
         }
     }
 
-    getNoUserConfig() {
+    getSerializedNoUserConfig() {
 
         const hueNodeService = global.getHueNodeService();
 

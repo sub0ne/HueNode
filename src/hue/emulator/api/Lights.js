@@ -17,7 +17,7 @@ class Lights {
             const deviceID = device.getDeviceID();
 
             if (!lights[deviceID])  {
-                lights[deviceID] = this._mapDeviceToResponse(device);
+                lights[deviceID] = this._getJSONDeviceDescription(device);
             } else {
                 global.getHueNodeService().Logger.info(`[Hue Emulator] Duplicate device ID detected: ${deviceID}`);    
             }        
@@ -32,7 +32,7 @@ class Lights {
         const lightDevice = hue.getLight(deviceID);
 
         if (lightDevice) {
-            return this._mapDeviceToResponse(lightDevice);
+            return this._getJSONDeviceDescription(lightDevice);
         } else {
             //TODO 
             return "";
@@ -62,7 +62,7 @@ class Lights {
 
     }
 
-    static _mapDeviceToResponse(device) {
+    static _getJSONDeviceDescription(device) {
 
         const hueNodeService = global.getHueNodeService();
 
@@ -78,7 +78,7 @@ class Lights {
             uniqueID: device.getUniqueID()
         }
 
-        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
+        return JSON.parse(hueNodeService.getTemplateProcessor().setParameters(template, parameters));
 
     }
 
