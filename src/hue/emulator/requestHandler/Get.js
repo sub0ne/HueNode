@@ -37,7 +37,7 @@ const handleGet = (request, response) => {
 
         const parameters = URLParser.getParameters(url, PATTERN_USERNAME);
 
-        responseData. config = Users.getUserData();
+        const responseData = Users.getUserData();
 
         response.status(200);
         response.type('application/json');

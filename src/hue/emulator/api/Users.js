@@ -30,7 +30,9 @@ class Users {
             rules: {}
         }
 
-        responseData.config = Config.getConfig();                
+        responseData.config = Config.getConfig();
+
+        return responseData;
 
     }
     

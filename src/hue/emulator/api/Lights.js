@@ -45,18 +45,21 @@ class Lights {
         const hue = global.getHueNodeService().getHue();
         const lightDevice = hue.getLight(deviceID);
 
-        console.log(states);
+        const responses = [];
 
-        
+        Object.keys(states).forEach(state => {
+            const value = states[state];
+            
+            const result = {};
+            if (lightDevice.setState(state, value)) {                
+                result[`/lights/${deviceID}/state/${state}`] = value;     
+                responses.push({success: result});
+            }
 
-               
-        /*const response = [
-                {
-                    "success": {
-                        "/lights/2/state/on": state
-                    }
-                }
-            ];*/ 
+        });
+
+        return responses;
+
     }
 
     static _mapDeviceToResponse(device) {
@@ -70,7 +73,7 @@ class Lights {
         let template = fs.readFileSync(deviceTemplateFilePath, "utf8");
      
         const parameters = {
-            on: device.getStateOn(),
+            on: device.getState("on"),
             name: device.getName(),
             uniqueID: device.getUniqueID()
         }
