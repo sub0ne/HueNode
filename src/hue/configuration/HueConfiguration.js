@@ -25,7 +25,8 @@ class HueConfiguration {
             uuid: this.getUUID(),
             serialNumber: this.getSerialNumber(),
             ipAddress: this.getIPAddress(),
-            modelID: this.getModelID()
+            modelID: this.getModelID(),
+            defaultPort: this.getDefaultPort()
         }
 
         return hueNodeService.getTemplateProcessor().setParameters(template, parameters);

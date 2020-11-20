@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const CryptoJS = require ('crypto-js');
+const CryptoJS = require('crypto-js');
 const HueServer = require('./HueServer.js');
 const Light = require('../device/Light.js');
 
@@ -54,11 +54,16 @@ class Hue {
 
         global.getHueNodeService().Logger.info(`[Hue Emulator] Loading devices`);
 
-        const devices = JSON.parse(fs.readFileSync(this._getDevicesFilePath(), "utf8"));
-
         let updateDevices = false;
 
-        updateDevices = this._loadLights(devices.lights);
+        let devices = {};
+        if (fs.existsSync(this._getDevicesFilePath())) {
+            devices = JSON.parse(fs.readFileSync(this._getDevicesFilePath(), "utf8"));
+        } else {
+            updateDevices = true;
+        }
+
+        updateDevices = this._loadLights(devices.lights) || updateDevices;
 
         if (updateDevices) {
             this._saveDevices(devices);
@@ -69,11 +74,15 @@ class Hue {
         global.getHueNodeService().Logger.info(`[Hue Emulator] Updating device file: ${this._getDevicesFilePath()}`);
 
         const data = new Uint8Array(Buffer.from(JSON.stringify(devices, null, 1)));
-        
-        fs.writeFile(this._getDevicesFilePath(), data, () => {});
+
+        fs.writeFile(this._getDevicesFilePath(), data, () => { });
     }
 
     _loadLights(lights) {
+
+        if (!lights) {
+            return;
+        }
 
         let deviceUpdated = false;
 
@@ -89,7 +98,7 @@ class Hue {
         }, {});
 
         return deviceUpdated;
-        
+
     }
 
     _getDataFolderPath() {
@@ -107,38 +116,39 @@ class Hue {
         const keySegments = [];
 
         for (let i = 0; i <= 7; i++) {
-            keySegments.push(encryptedDeviceID.substring(i*2, i*2 + 2));
+            keySegments.push(encryptedDeviceID.substring(i * 2, i * 2 + 2));
         }
-              
+
         return `${keySegments.join(":")}-01`;
-      
+
     }
 
-    _encodeDeviceID(deviceID, key){
+    _encodeDeviceID(deviceID, key) {
 
         const keyHex = CryptoJS.enc.Utf8.parse(key);
-      
+
         const encrypted = CryptoJS.TripleDES.encrypt(deviceID, keyHex, {
-          mode: CryptoJS.mode.ECB,
-          padding: CryptoJS.pad.Pkcs7
+            mode: CryptoJS.mode.ECB,
+            padding: CryptoJS.pad.Pkcs7
         });
-      
+
         const encryptedDeviceID = CryptoJS.enc.Hex.stringify(encrypted.ciphertext).toUpperCase();
-      
+
         return encryptedDeviceID;
     }
 
     _decodeDeviceID(encodedDeviceID, key) {
         const keyHex = CryptoJS.enc.Utf8.parse(key);
-      
+
         const decrypted = CryptoJS.TripleDES.decrypt({
-          ciphertext: CryptoJS.enc.Hex.parse(encodedDeviceID)}, keyHex, {
+            ciphertext: CryptoJS.enc.Hex.parse(encodedDeviceID)
+        }, keyHex, {
             mode: CryptoJS.mode.ECB,
             padding: CryptoJS.pad.Pkcs7
         });
-      
+
         return decrypted.toString(CryptoJS.enc.Utf8);
-      
+
     }
 
 }
