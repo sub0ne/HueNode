@@ -4,46 +4,48 @@ const getHandler = require('./requestHandler/Get.js');
 const putHandler = require('./requestHandler/Put.js');
 const postHandler = require('./requestHandler/Post.js');
 const deleteHandler = require('./requestHandler/Delete.js');
+const http = require('http');
 
 class HueServer {
 
     constructor() {
-        this._express = undefined;
-        this._server = undefined;
+        this._httpServer = undefined;
     }
 
     stopServer() {
-        if (this._server) {
-            this._server.close();
+        if (this._httpServer) {
+            this._httpServer.close();
             global.getHueNodeService().Logger.info(`[Hue Server] Stopped`);
             
-            this._server = undefined;
-            this._express = undefined;
+            this._httpServer = undefined;
         }
     }
 
     startServer() {
         
-        this._express = express();
+        const app = express();
 
         global.getHueNodeService().Logger.info(`[Hue Server] Starting`);
 
-        this._express.use(bodyParser.json());
+        app.use(bodyParser.json());
 
-        this._express.get('/*', (req, res) => getHandler.handleGet(req,res));
-        this._express.post('/*', (req, res) => postHandler.handlePost(req,res));
-        this._express.put('/*', (req, res) => putHandler.handlePut(req,res));
-        this._express.delete('/*', (req, res) => deleteHandler(req, res));
+        app.get('/*', (req, res) => getHandler.handleGet(req,res));
+        app.post('/*', (req, res) => postHandler.handlePost(req,res));
+        app.put('/*', (req, res) => putHandler.handlePut(req,res));
+        app.delete('/*', (req, res) => deleteHandler(req, res));
 
-        const port = global.getHueNodeService().getHueConfiguration().getDefaultPort();
+        const port = 80;
+        const sslPort = 443;
 
         global.getHueNodeService().Logger.info(`[Hue Server] Listening on port ${port}`);
-        this._server = this._express.listen(port);
+
+        this._httpServer = http.createServer(app);
+        this._httpServer.listen(port);
 
     }
 
     isRunning() {
-        return !!this._server;
+        return !!this._httpServer;
     }
 
 }
