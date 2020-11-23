@@ -28,7 +28,7 @@ class UPnPServer {
         this._socket.on('message', (message, requestInfo) => {
 
             const strMessage = message.toString().trim();
-
+            
             if (strMessage.includes('M-SEARCH * HTTP/1.1') &&
                 strMessage.includes(`HOST: ${MULTICAST_ADDRESS}:${PORT}`) &&
                 strMessage.includes('MAN: "ssdp:discover"') &&
@@ -76,10 +76,19 @@ class UPnPServer {
 
     _getUPnPResponse() {
         
-        const hueConfiguration = global.getHueNodeService().getHueConfiguration();
+        const hueNodeService = global.getHueNodeService();
 
-        let strResponse = fs.readFileSync(this._getUPnPResponseTemplatePath(), "utf8");
-        return strResponse.replace('{uuid}', hueConfiguration.getUUID());
+        const hueConfiguration = hueNodeService.getHueConfiguration();
+
+        let template = fs.readFileSync(this._getUPnPResponseTemplatePath(), "utf8");
+        
+        const parameters = {
+            uuid: hueConfiguration.getUUID(),            
+            ipAddress: hueConfiguration.getIPAddress()            
+        }
+
+        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
+
     }
 
 }

@@ -1,7 +1,7 @@
 HTTP/1.1 200 OK
 CACHE-CONTROL: max-age=100
 EXT:
-LOCATION: http://192.168.178.34:80/description.xml
+LOCATION: http://{ipAddress}:80/description.xml
 SERVER: FreeRTOS/6.0.5, UPnP/1.0, IpBridge/0.1
 ST: upnp:rootdevice
 USN: uuid:{uuid}::upnp:rootdevice

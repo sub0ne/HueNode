@@ -26,7 +26,7 @@ class Hue {
 
     }
 
-    startHue() {
+    async startHue() {
 
         this._loadDevices();
 

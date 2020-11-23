@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
+const determineIPAddress = require('./determineIPAddress.js');
 
 const HUE_BRIDGE_TEMPLATE_FILE = "HueBridge.xml";
 const NOUSER_CONFIG_FILE = "nouser_config.json";
@@ -12,6 +13,35 @@ const HUE_CONFIGURATION_FILE = "Configuration.json";
 class HueConfiguration {
 
     constructor() {         
+    }
+
+    initialize() {
+
+        global.getHueNodeService().Logger.info(`[Hue Configuration] Initializing configuration`);
+
+        return Promise.all([
+            this._determineIPAddress()
+        ]);
+    }
+
+    async _determineIPAddress() {
+        
+        if (!!this.getIPAddress()) {
+            global.getHueNodeService().Logger.info(`[Hue Configuration] IP address set to ${this.getIPAddress()} due to 'Configuration.json'`);
+            return;
+        }
+
+        global.getHueNodeService().Logger.info(`[Hue Configuration] Trying to determine IP address`);
+
+        const ipAddresses = await determineIPAddress.get();
+
+        if (ipAddresses.length !== 1) {
+            global.getHueNodeService().Logger.info(`[Hue Configuration] IP address could not be determined`);
+            throw new Error("IP address could not be determined");
+        }
+        
+        this._setIPAddress(ipAddresses[0]);
+
     }
 
     getSerializedHueBridgeDescription() {
@@ -127,7 +157,12 @@ class HueConfiguration {
     }
 
     getIPAddress() {
-        return "192.168.178.31";
+        return this._getConfiguration().ipAddress;
+    }
+
+    _setIPAddress(ipAddress) {
+        global.getHueNodeService().Logger.info(`[Hue Configuration] Setting IP address to '${ipAddress}'`);
+        this._getConfiguration().ipAddress = ipAddress;
     }
 
     getTime() {

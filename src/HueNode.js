@@ -5,15 +5,20 @@ global.getHueNodeService = () => {
     return hueNodeService;
 }
 
-const hue = hueNodeService.getHue();
-const upnpServer = hueNodeService.getUPnPServer();
+hueNodeService.getHueConfiguration().initialize().then(() => {
 
-process.on('SIGINT', function() {
-    upnpServer.stopListening();
-    hue.stopHue();
-    process.exit();
+    const hue = hueNodeService.getHue();
+    const upnpServer = hueNodeService.getUPnPServer();
+
+    process.on('SIGINT', function () {
+        upnpServer.stopListening();
+        hue.stopHue();
+        process.exit();
+    });
+
+    upnpServer.startListening();
+    hue.startHue();
+
+}).catch(() => {
+
 });
-
-upnpServer.startListening();
-hue.startHue();
-
