@@ -3,8 +3,8 @@
     "gateway":"{ipAddress}",
     "mac":"{macAddress}",
     "swversion":"9999999999",
-    "apiversion":"1.19.0",
-    "linkbutton":false,
+    "apiversion":"1.41.0",
+    "linkbutton":true,
     "ipaddress":"{ipAddress}",
     "proxyport":0,
     "swupdate":{

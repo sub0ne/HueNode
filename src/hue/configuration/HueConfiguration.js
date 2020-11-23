@@ -123,7 +123,7 @@ class HueConfiguration {
     }
 
     getIPAddress() {
-        return "192.168.178.34";
+        return "192.168.178.31";
     }
 
     getTime() {

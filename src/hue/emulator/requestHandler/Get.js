@@ -13,8 +13,9 @@ const PATTERN_LIGHT = "/api/:username/lights/:deviceID";
 const handleGet = (request, response) => {
 
     const url = request.url;
+    const protocol = request.protocol.toUpperCase();
 
-    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (GET) received: ${url}`);    
+    global.getHueNodeService().Logger.info(`[Hue Emulator] ${protocol}-Request (GET) received: ${url}`);    
 
     
     if (URLParser.matchesPattern(url, PATTERN_DESCRIPTION)) {
@@ -67,7 +68,7 @@ const handleGet = (request, response) => {
         response.status(404);
         response.send();
 
-        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for HTTP-Request (GET): ${request.url}`);    
+        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for ${protocol}-Request (GET): ${request.url}`);    
     }
 
 }

@@ -6,8 +6,9 @@ const PATTERN_LIGHT_STATE = "/api/:username/lights/:deviceID/state";
 const handlePut = (request, response) => {
 
     const url = request.url;
+    const protocol = request.protocol.toUpperCase();
 
-    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (PUT) received: ${url}`);    
+    global.getHueNodeService().Logger.info(`[Hue Emulator] ${protocol}-Request (PUT) received: ${url}`);    
 
     if (URLParser.matchesPattern(url,PATTERN_LIGHT_STATE)) {
 
@@ -16,7 +17,7 @@ const handlePut = (request, response) => {
 
         const states = request.body;
 
-        global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (PUT) HTTP-Request body received state changes:'`);
+        global.getHueNodeService().Logger.info(`[Hue Emulator] ${protocol}-Request (PUT) Request body received state changes:'`);
         Object.keys(states).forEach(parameter => {
             global.getHueNodeService().Logger.info(`[Hue Emulator] '${parameter}' --> '${states[parameter]}'`);
         });
@@ -32,7 +33,7 @@ const handlePut = (request, response) => {
         response.status(404);
         response.send();
 
-        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for HTTP-Request (PUT): ${url}`);    
+        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for ${protocol}-Request (PUT): ${url}`);    
     }
 
 }

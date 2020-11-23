@@ -6,8 +6,9 @@ const PATTERN_API = "/api";
 const handlePost = (request, response) => {
 
     const url = request.url;
+    const protocol = request.protocol.toUpperCase();
 
-    global.getHueNodeService().Logger.info(`[Hue Emulator] HTTP-Request (POST) received: ${url}`);    
+    global.getHueNodeService().Logger.info(`[Hue Emulator] ${protocol}-Request (POST) received: ${url}`);    
 
     if (URLParser.matchesPattern(url, PATTERN_API)) {
 
@@ -22,7 +23,7 @@ const handlePost = (request, response) => {
         response.status(404);
         response.send();
 
-        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for HTTP-Request (POST): ${url}`);
+        global.getHueNodeService().Logger.info(`[Hue Emulator] No handler found for ${protocol}-Request (POST): ${url}`);
     }
 
 }
