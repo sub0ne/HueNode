@@ -18,7 +18,7 @@
        "url":""
     },
     "netmask":"255.255.255.0",
-    "name":"My cool hue",
+    "name":"{name}",
     "dhcp":true,
     "UTC":"{utcTime}",
     "proxyaddress":"none",

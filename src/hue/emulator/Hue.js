@@ -18,7 +18,7 @@ class Hue {
 
     stopHue() {
 
-        global.getHueNodeService().Logger.info(`[Hue Emulator] Stop Hue`);
+        global.getHueNodeService().Logger.info(`[Hue Emulator] Stopped`);
 
         if (this._hueServer && this._hueServer.isRunning()) {
             this._hueServer.stopServer();
@@ -30,7 +30,7 @@ class Hue {
 
         this._loadDevices();
 
-        global.getHueNodeService().Logger.info(`[Hue Emulator] Start Hue`);
+        global.getHueNodeService().Logger.info(`[Hue Emulator] Starting`);
 
         if (!this._hueServer) {
             this._hueServer = new HueServer();

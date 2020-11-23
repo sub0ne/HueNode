@@ -11,7 +11,7 @@ const HUE_CONFIGURATION_FILE = "Configuration.json";
 
 class HueConfiguration {
 
-    constructor() { 
+    constructor() {         
     }
 
     getSerializedHueBridgeDescription() {
@@ -76,7 +76,7 @@ class HueConfiguration {
         const serialNumber = uuid.split('-')[4];
         
         this._configuration = {
-            Name: 'HueNode Hue',
+            name: 'HueNode Hue',
             uuid,
             serialNumber
         }        
@@ -106,6 +106,10 @@ class HueConfiguration {
         const serialNumber = this.getSerialNumber();
         const bridgeID = serialNumber.substring(0, 6) + "FFFE" + serialNumber.substring(6);
         return bridgeID.toUpperCase();
+    }
+
+    getName() {
+        return this._getConfiguration().name;
     }
 
     getMacAddress() {
@@ -144,6 +148,7 @@ class HueConfiguration {
         const time = this.getTime();
 
         const parameters = {
+            name: this.getName(),
             ipAddress: this.getIPAddress(),
             macAddress: this.getMacAddress(),
             bridgeID: this.getBridgeID(),
