@@ -24,7 +24,7 @@ const handlePut = (request, response) => {
         global.getHueNodeService().Logger.info(`[Hue Emulator] ${protocol}-Request (PUT) Request body received state changes:'`);
         for (state in states) {
             global.getHueNodeService().Logger.info(`[Hue Emulator] '${state}' --> '${states[state]}'`);
-        });
+        };
 
         const responseData = Lights.setState(deviceID, states);
     

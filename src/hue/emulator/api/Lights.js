@@ -71,7 +71,7 @@ class Lights {
                 responses.push({success: result});
             }
 
-        });
+        };
 
         return responses;
 
