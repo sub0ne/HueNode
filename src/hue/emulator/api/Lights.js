@@ -59,7 +59,7 @@ class Lights {
 
         const responses = [];
 
-        for (state in states) {
+        for (let state in states) {
 
             // get the value
             const value = states[state];

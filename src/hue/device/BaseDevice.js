@@ -5,7 +5,21 @@ class BaseDevice {
     _name = undefined;
     _uniqueID = undefined;
 
-    constructor(parameters) {
+    constructor(parameters, metadata) {
+
+        for (let property in metadata.properties) {
+
+            const typeDescription = metadata.properties[property];
+
+            switch (typeDescription.type) {
+                case "boolean":
+                    this[`_${property}`] = false;
+                    break;
+                default:
+            }
+            
+        }
+
         this._deviceID = parameters.deviceID;
         this._templateType = parameters.templateType;
         this._name = parameters.name;

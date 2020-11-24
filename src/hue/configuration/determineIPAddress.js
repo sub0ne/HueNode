@@ -12,7 +12,7 @@ const getIPs = () => {
     const ipv4 = [];
 
     // filter out IPs of type IPv4
-    for (device in net) {
+    for (let device in net) {
         ipv4.push(...net[device].filter(y => !y.internal && y.family === 'IPv4'));
     }
     

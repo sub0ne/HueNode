@@ -5,7 +5,7 @@ const TemplateProcessor = {
 
         let result = template;
 
-        for (parameter in parameters) {
+        for (let parameter in parameters) {
             const strRegEx = `\\{${parameter}\\}`;
             const regEx = new RegExp(strRegEx, "g");
 

@@ -1,12 +1,18 @@
 const BaseDevice = require('./BaseDevice.js');
 
 class Light extends BaseDevice {
+
+    static metadata = {
+        properties: {
+            on: {type: "boolean"}
+        }
+    };
     
-    // States
-    _on = false;
+    // properties
+    //_on = false;
 
     constructor(parameters) {
-        super(parameters);
+        super(parameters, Light.metadata);
     }
 
 }
