@@ -5,12 +5,12 @@ const TemplateProcessor = {
 
         let result = template;
 
-        Object.keys(parameters).forEach(parameter => {
+        for (parameter in parameters) {
             const strRegEx = `\\{${parameter}\\}`;
             const regEx = new RegExp(strRegEx, "g");
 
             result = result.replace(regEx, parameters[parameter]);
-        });
+        };
 
         return result;
 

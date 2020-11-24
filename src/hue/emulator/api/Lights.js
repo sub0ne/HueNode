@@ -59,7 +59,7 @@ class Lights {
 
         const responses = [];
 
-        Object.keys(states).forEach(state => {
+        for (state in states) {
 
             // get the value
             const value = states[state];
