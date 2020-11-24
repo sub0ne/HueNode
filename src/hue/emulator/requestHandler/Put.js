@@ -3,6 +3,9 @@ const Lights = require('../api/Lights.js');
 
 const PATTERN_LIGHT_STATE = "/api/:username/lights/:deviceID/state";
 
+/**
+ * handle PUT
+ */
 const handlePut = (request, response) => {
 
     const url = request.url;
@@ -10,6 +13,7 @@ const handlePut = (request, response) => {
 
     global.getHueNodeService().Logger.info(`[Hue Emulator] ${protocol}-Request (PUT) received: ${url}`);    
 
+    // /api/:username/lights/:deviceID/state
     if (URLParser.matchesPattern(url,PATTERN_LIGHT_STATE)) {
 
         const parameters = URLParser.getParameters(url, PATTERN_LIGHT_STATE);
@@ -28,6 +32,7 @@ const handlePut = (request, response) => {
         response.type('application/json');
         response.send(responseData);
 
+    // no handler found for request
     } else {
         
         response.status(404);

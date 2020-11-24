@@ -1,12 +1,17 @@
 const https = require('https');
 const os = require('os');
 
+/**
+ * get IPv4 ips from available network interfaces
+ */
 const getIPs = () => {
     
+    // get network devices
     const net = os.networkInterfaces();
 
     const ipv4 = [];
 
+    // filter out IPs of type IPv4
     for (device in net) {
         ipv4.push(...net[device].filter(y => !y.internal && y.family === 'IPv4'));
     }
@@ -14,6 +19,10 @@ const getIPs = () => {
     return ipv4;
 }
 
+/**
+ * test if https://www.google.com is reachable through a given ip
+ * @param {string} ip 
+ */
 const test = (ip) => {
 
     return new Promise((resolve) => {
@@ -55,7 +64,10 @@ const test = (ip) => {
 
 }
 
-
+/**
+ * test an array of ip address objects
+ * @param {Object[]} ipv4 
+ */
 const testIPs = (ipv4) => {
 
     const tests = ipv4.map(ip => test(ip));
@@ -64,9 +76,11 @@ const testIPs = (ipv4) => {
 
 }
 
-
 const determineIPAddress = {
 
+    /**
+     * try heuristically determine the hosts ip address
+     */
     async get() {
 
         const ipv4 = getIPs();

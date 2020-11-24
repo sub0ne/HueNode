@@ -1,5 +1,8 @@
 class Groups {
 
+    /**
+     * get all groups
+     */
     static getGroups() {
         return {};
     }

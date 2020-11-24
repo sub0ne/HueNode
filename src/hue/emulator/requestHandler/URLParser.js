@@ -1,6 +1,12 @@
 
+/**
+ * URLParser for parsing parameters from a request
+ */
 const URLParser = {
 
+    /**
+     * check if url matches a given pattern
+     */
     matchesPattern: (url, pattern) => {
         const strRegEx = pattern.replace(/(?<=\/):\w+/g, '\\w+'); // replace :variable with regex placeholder
         const regEx = new RegExp(`${strRegEx}[\/]?$`);
@@ -8,6 +14,9 @@ const URLParser = {
         return regEx.test(url);
     },
 
+    /**
+     * get parameters from url using a given pattern
+     */
     getParameters: (url, pattern) => {
     
         const keyRegEx = /(?<=\/:)\w+/gm // get all :variables from pattern (keys)
@@ -17,6 +26,7 @@ const URLParser = {
         const valueRegEx = new RegExp( valueStrRegEx, "gm");
         const values = valueRegEx.exec(url);
     
+        // create parameters object
         const parameters = {};
     
         keys.forEach((key, index) => {

@@ -14,6 +14,9 @@ class UPnPServer {
         this._socket = null;
     }
 
+    /**
+     * stop listening
+     */
     stopListening() {
         if (this._socket) {
             global.getHueNodeService().Logger.info(`[UPnPServer] Stopped listening`);
@@ -21,6 +24,9 @@ class UPnPServer {
         }
     }
 
+    /**
+     * start listening
+     */
     async startListening() {
        
         this._socket = dgram.createSocket('udp4');
@@ -28,7 +34,8 @@ class UPnPServer {
         this._socket.on('message', (message, requestInfo) => {
 
             const strMessage = message.toString().trim();
-            
+
+            // check if required SSDP request is received            
             if (strMessage.includes('M-SEARCH * HTTP/1.1') &&
                 strMessage.includes(`HOST: ${MULTICAST_ADDRESS}:${PORT}`) &&
                 strMessage.includes('MAN: "ssdp:discover"') &&
@@ -36,6 +43,7 @@ class UPnPServer {
 
                 global.getHueNodeService().Logger.info(`[UPnPServer] SSDP request received: ${strMessage}`);
 
+                // get MX value from request
                 const ssdpParser = new SSDPParser(strMessage);
                 const mxValue = ssdpParser.getMX() || 0;
 
@@ -45,6 +53,7 @@ class UPnPServer {
 
                 const response = new Buffer(strResponse); // TODO: use Buffer.from()
 
+                // wait up to mxValue before sending the response
                 const mxTimeout = Math.floor(Math.random() * mxValue * 1000); 
 
                 setTimeout(() => {
@@ -63,30 +72,43 @@ class UPnPServer {
 
         });
 
+        // bind socket
         this._socket.bind(PORT, () => {
+            
             global.getHueNodeService().Logger.info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
-            this._socket.addMembership(MULTICAST_ADDRESS);
+            
+            // subscripe on 239.255.255.250
+            this._socket.addMembership(MULTICAST_ADDRESS); 
           });        
 
     }
 
+    /**
+     * get the 'UPnPResponse'-Template path
+     */
     _getUPnPResponseTemplatePath() {
         return path.join(APP_ROOT, "templates", UPNP_RESPONSE_TEMPLATE_FILE);
     }
 
+    /**
+     * get the UPnPResponse
+     */
     _getUPnPResponse() {
         
         const hueNodeService = global.getHueNodeService();
 
         const hueConfiguration = hueNodeService.getHueConfiguration();
 
+        // read the template file
         let template = fs.readFileSync(this._getUPnPResponseTemplatePath(), "utf8");
         
+        // response parameters
         const parameters = {
             uuid: hueConfiguration.getUUID(),            
             ipAddress: hueConfiguration.getIPAddress()            
         }
 
+        // set parameters and return response
         return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
 
     }

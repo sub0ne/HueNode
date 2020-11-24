@@ -5,6 +5,9 @@ const APP_ROOT = path.dirname(require.main.filename);
 
 class Lights {
 
+    /**
+     * get all lights
+     */
     static getLights() {
 
         const hue = global.getHueNodeService().getHue();
@@ -26,6 +29,10 @@ class Lights {
         return lights;
     }
 
+    /**
+     * get light by deviceID
+     * @param {string} deviceID 
+     */
     static getLight(deviceID) {
 
         const hue = global.getHueNodeService().getHue();
@@ -40,6 +47,11 @@ class Lights {
 
     }
 
+    /**
+     * set state
+     * @param {string} deviceID 
+     * @param {string} states 
+     */
     static setState(deviceID, states) {
 
         const hue = global.getHueNodeService().getHue();
@@ -48,8 +60,11 @@ class Lights {
         const responses = [];
 
         Object.keys(states).forEach(state => {
+
+            // get the value
             const value = states[state];
             
+            // set state at object and create reponse
             const result = {};
             if (lightDevice.setState(state, value)) {                
                 result[`/lights/${deviceID}/state/${state}`] = value;     
@@ -62,6 +77,12 @@ class Lights {
 
     }
 
+    /**
+     * create JSON description of a device using a json template.
+     * The template is specified by the templateType parameter in 'Devices.json'
+     * 
+     * @param {Object} device 
+     */
     static _getJSONDeviceDescription(device) {
 
         const hueNodeService = global.getHueNodeService();
@@ -72,6 +93,7 @@ class Lights {
         
         let template = fs.readFileSync(deviceTemplateFilePath, "utf8");
      
+        // set parameters for template
         const parameters = {
             on: device.getState("on"),
             name: device.getName(),
@@ -82,6 +104,10 @@ class Lights {
 
     }
 
+    /**
+     * get device template path '<APP_ROOT>/templates/devices/<templateType>'
+     * @param {string} deviceType 
+     */
     static _getDeviceTemplateFilePath(deviceType) {
         const templateFileName = `${deviceType.replace(/\s/gm, "_")}.json`;
         return path.join(APP_ROOT, "templates", "devices", templateFileName);

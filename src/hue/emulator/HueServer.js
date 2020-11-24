@@ -14,6 +14,9 @@ class HueServer {
         this._httpServer = undefined;
     }
 
+    /**
+     * stop hue http/https server
+     */
     stopServer() {
         if (this._httpServer) {
             this._httpServer.close();
@@ -23,29 +26,37 @@ class HueServer {
         }
     }
 
+    /**
+     * start hue http/https server
+     */
     startServer() {
         
         const app = express();
 
         global.getHueNodeService().Logger.info(`[Hue Server] Starting`);
 
+        // parse body to json
         app.use(bodyParser.json());
 
+        // register handlers
         app.get('/*', (req, res) => getHandler.handleGet(req,res));
         app.post('/*', (req, res) => postHandler.handlePost(req,res));
         app.put('/*', (req, res) => putHandler.handlePut(req,res));
         app.delete('/*', (req, res) => deleteHandler(req, res));
 
+        // used ports
         const port = 80;
         const sslPort = 443;
 
         global.getHueNodeService().Logger.info(`[Hue Server] Listening on port ${port}`);
 
+        // setup http server
         this._httpServer = http.createServer(app);
         this._httpServer.listen(port);
 
         global.getHueNodeService().Logger.info(`[Hue Server] Listening on port ${sslPort}`);
 
+        // setup https server
         this._httpsServer = https.createServer(this._getCredentials(), app);
         this._httpsServer.listen(sslPort);
 
@@ -55,6 +66,9 @@ class HueServer {
         return !!this._httpServer;
     }
 
+    /**
+     * create self signed certificate for https communication
+     */
     _getCredentials(){
 
         const pki = forge.pki;
@@ -67,10 +81,12 @@ class HueServer {
 
         cert.validity.notBefore = new Date();
 
+        // certificate is valid for 30 days
         var validUntil = new Date();
         validUntil.setDate(validUntil.getDate() + 30);
         cert.validity.notAfter = validUntil;
 
+        // attributes according to Hue API
         const attrs = [{
             name: 'countryName',
             value: 'NL'
@@ -82,13 +98,15 @@ class HueServer {
             value: bridgeID
           }
         ];
-        cert.setSubject(attrs); // set some attributes
-        cert.setIssuer(attrs);
+        cert.setSubject(attrs); // set subject attributes
+        cert.setIssuer(attrs);  // set issues attributes
         
-        cert.sign(keys.privateKey); // sign the certificate with the private key
-        
-        const privateKey = pki.privateKeyToPem(keys.privateKey); // pem private key
-        const certificate = pki.certificateToPem(cert); // pem certificate
+        // sign the certificate with the private key
+        cert.sign(keys.privateKey); 
+
+        // pem 
+        const privateKey = pki.privateKeyToPem(keys.privateKey); 
+        const certificate = pki.certificateToPem(cert); 
         
         const credentials = {
              key: privateKey, 

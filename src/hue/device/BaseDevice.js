@@ -12,22 +12,39 @@ class BaseDevice {
         this._uniqueID = parameters.uniqueID;
     }
 
+    /**
+     * get deviceID
+     */
     getDeviceID() {
         return this._deviceID;
     }
 
+    /**
+     * get templateType
+     */
     getTemplateType() {
         return this._templateType;
     }
 
+    /**
+     * get name
+     */
     getName() {
         return this._name;
     }
 
+    /**
+     * get uniqueID
+     */
     getUniqueID() {
         return this._uniqueID;
     }
 
+    /**
+     * set state to value 
+     * @param {string} state 
+     * @param {any} value 
+     */
     setState(state, value) {
 
         const propertyName = `_${state}`
@@ -41,6 +58,10 @@ class BaseDevice {
 
     }
 
+    /**
+     * get value of state
+     * @param {string} state 
+     */
     getState(state) {
 
         const propertyName = `_${state}`

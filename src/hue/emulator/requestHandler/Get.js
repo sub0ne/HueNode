@@ -10,14 +10,17 @@ const PATTERN_USERNAME = "/api/:username";
 const PATTERN_LIGHTS = "/api/:username/lights";
 const PATTERN_LIGHT = "/api/:username/lights/:deviceID";
 
+/**
+ * handle GET
+ */
 const handleGet = (request, response) => {
 
     const url = request.url;
     const protocol = request.protocol.toUpperCase();
 
     global.getHueNodeService().Logger.info(`[Hue Emulator] ${protocol}-Request (GET) received: ${url}`);    
-
-    
+ 
+    // /description.xml
     if (URLParser.matchesPattern(url, PATTERN_DESCRIPTION)) {
     
         const responseData = Description.getSerializedDescription();
@@ -26,6 +29,7 @@ const handleGet = (request, response) => {
         response.type('application/xml');
         response.send(responseData); 
 
+    // /api/:username/config
     } else if (URLParser.matchesPattern(url, PATTERN_CONFIG)) {
 
         const responseData = Config.getJSONConfig();
@@ -34,8 +38,10 @@ const handleGet = (request, response) => {
         response.type('application/json');
         response.send(responseData);  
 
+    // /api/:username   
     } else if (URLParser.matchesPattern(url, PATTERN_USERNAME)) { 
 
+        // currently username is not further interpreted 
         const parameters = URLParser.getParameters(url, PATTERN_USERNAME);
 
         const responseData = Users.getUserData();
@@ -44,6 +50,7 @@ const handleGet = (request, response) => {
         response.type('application/json');
         response.send(responseData);  
 
+    // /api/:username/lights;
     } else if (URLParser.matchesPattern(url, PATTERN_LIGHTS)) {
 
         const responseData = Lights.getLights();
@@ -52,6 +59,7 @@ const handleGet = (request, response) => {
         response.type('application/json');
         response.send(responseData);
 
+    // /api/:username/lights/:deviceID
     } else if (URLParser.matchesPattern(url, PATTERN_LIGHT)) {
 
         const parameters = URLParser.getParameters(url, PATTERN_LIGHT);
@@ -63,6 +71,7 @@ const handleGet = (request, response) => {
         response.type('application/json');
         response.send(responseData);
 
+    // no handler found for request
     } else {
 
         response.status(404);

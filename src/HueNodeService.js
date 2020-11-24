@@ -24,6 +24,9 @@ class HueNodeService {
 
     }
 
+    /**
+     * get the Hue instance (singleton)
+     */
     getHue() {
 
         if (!hueInstance) {
@@ -34,6 +37,9 @@ class HueNodeService {
 
     }
 
+    /**
+     * get the UPnPServer instance
+     */
     getUPnPServer() {
 
         if (!upnpServerInstance) {
@@ -44,6 +50,9 @@ class HueNodeService {
 
     }
 
+    /**
+     * getter for TemplateProcessor
+     */
     getTemplateProcessor() {
         return TemplateProcessor;
     }

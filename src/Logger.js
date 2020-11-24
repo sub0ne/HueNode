@@ -5,6 +5,9 @@ class Logger {
 
     static _logger;
 
+    /**
+     * get Logger instance
+     */
     static getLogger(logLevel) {
 
         if (!Logger._logger) {
@@ -15,6 +18,9 @@ class Logger {
 
     }
 
+    /**
+     * initialize the Logger instance
+     */
     static _initializeLogger(logLevel) {
         if (!Logger._logger) {
             this._logger = winston.createLogger({

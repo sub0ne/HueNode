@@ -6,8 +6,12 @@ const Groups = require('./Groups.js');
 
 class Users {
 
+    /**
+     * create a new api user 
+     */
     static createUser() {
 
+        // use uuidv4 as api user
         const uuid = uuidv4();
         const username = uuid.replace(/-/g, '');
 
@@ -19,8 +23,12 @@ class Users {
 
     }
 
+    /**
+     * get user data
+     */
     static getUserData() {
 
+        // get all necessary objects
         const responseData = {
             lights: Lights.getLights(),
             scenes: {},
@@ -30,6 +38,7 @@ class Users {
             rules: {}
         }
 
+        // add 'nouser_config.json'
         responseData.config = Config.getJSONConfig();
 
         return responseData;

@@ -1,5 +1,8 @@
 const URLParser = require('./URLParser.js');
 
+/**
+ * handle DELETE
+ */
 const handlePost = (request, response) => {
 
     const url = request.url;
