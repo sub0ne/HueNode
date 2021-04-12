@@ -41,8 +41,8 @@ class Lights {
         if (lightDevice) {
             return this._getJSONDeviceDescription(lightDevice);
         } else {
-            //TODO 
-            return "";
+            global.getHueNodeService().Logger.error(`[Hue API Lights] Light with ID '${deviceID}' not found`);
+            throw new Error();
         }
 
     }

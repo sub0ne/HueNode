@@ -3,15 +3,19 @@ const path = require('path');
 const CryptoJS = require('crypto-js');
 const HueServer = require('./HueServer.js');
 const Light = require('../device/Light.js');
+const Group = require('../device/Group.js');
 
 const APP_ROOT = path.dirname(require.main.filename);
 const DATA_FOLDER = "data";
 const DEVICES_FILE = "Devices.json";
+const GROUPS_FILE = "Groups.json";
+
 
 class Hue {
 
     _hueServer = undefined;
     _lights = {};
+    _groups = {};
 
     constructor() {
     }
@@ -35,6 +39,7 @@ class Hue {
     async startHue() {
 
         this._loadDevices();
+        this._loadGroups();
 
         global.getHueNodeService().Logger.info(`[Hue Emulator] Starting`);
 
@@ -81,19 +86,20 @@ class Hue {
         }
 
         // load lights
-        updateDevices = this._loadLights(devices.lights) || updateDevices;
+        updateDevices = this._createLights(devices.lights) || updateDevices;
 
         // save updated '<APP_ROOT>/data/Devices.json'
         if (updateDevices) {
             this._saveDevices(devices);
         }
+
     }
 
     /**
      * read and parse '<APP_ROOT>/data/Devices.json'
      */
     _getJSONDevices() {
-        if (fs.existsSync(this._getDevicesFilePath())) {            
+        if (fs.existsSync(this._getDevicesFilePath())) {
             return JSON.parse(fs.readFileSync(this._getDevicesFilePath(), "utf8"));
         }
     }
@@ -114,7 +120,7 @@ class Hue {
      * create light objects from '<APP_ROOT>/data/Devices.json' definition
      * @param {Object[]} lights 
      */
-    _loadLights(lights) {
+    _createLights(lights) {
 
         if (!lights) {
             return;
@@ -144,9 +150,9 @@ class Hue {
         return path.join(APP_ROOT, DATA_FOLDER);
     }
 
-     /**
-     * get '<APP_ROOT>/data/Devices.json' path
-     */   
+    /**
+    * get '<APP_ROOT>/data/Devices.json' path
+    */
     _getDevicesFilePath() {
         return path.join(this._getDataFolderPath(), DEVICES_FILE);
     }
@@ -209,6 +215,72 @@ class Hue {
 
         return decrypted.toString(CryptoJS.enc.Utf8);
 
+    }
+
+
+    _loadGroups() {
+
+        global.getHueNodeService().Logger.info(`[Hue Emulator] Loading groups`);
+
+        let updateGroups = false;
+
+        // if '<APP_ROOT>/data/Devices.json' does not exist, create a new one
+        let groups = this._getJSONGroups();;
+        if (!groups) {
+            groups = {};
+            updateDevices = true;
+        }
+
+        // load lights
+        updateGroups = this._createGroups(groups.groups) || updateGroups;
+
+        // save updated '<APP_ROOT>/data/Devices.json'
+        if (updateGroups) {
+            this._saveGroups(groups);
+        }
+
+    }
+
+
+    _getJSONGroups() {
+        if (fs.existsSync(this._getGroupsFilePath())) {
+            return JSON.parse(fs.readFileSync(this._getGroupsFilePath(), "utf8"));
+        }
+    }
+
+
+    _getGroupsFilePath() {
+        return path.join(this._getDataFolderPath(), GROUPS_FILE);
+    }
+
+
+    _createGroups(groups) {
+
+        if (!groups) {
+            return;
+        }
+
+        let groupsUpdated = false;
+
+        this._groups = groups.reduce((groups, group) => {
+
+            groups[group.groupID] = new Group(group);
+
+            return groups;
+        }, {});
+
+        return groupsUpdated;
+
+    }
+
+
+    getGroups() {
+        return this._groups;
+    }
+
+
+    getGroup(groupID) {
+        return this._groups[groupID];
     }
 
 }

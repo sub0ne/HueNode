@@ -77,7 +77,7 @@ class UPnPServer {
             
             global.getHueNodeService().Logger.info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
             
-            // subscripe on 239.255.255.250
+            // subscribe on 239.255.255.250
             this._socket.addMembership(MULTICAST_ADDRESS); 
           });        
 

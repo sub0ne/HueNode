@@ -7,9 +7,6 @@ class Light extends BaseDevice {
             on: {type: "boolean"}
         }
     };
-    
-    // properties
-    //_on = false;
 
     constructor(parameters) {
         super(parameters, Light.metadata);

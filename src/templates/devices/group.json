@@ -1,0 +1,13 @@
+{
+    "action": {
+        "on": {on}
+    },
+    "lights": {lights},
+    "state": {
+        "any_on": {on},
+        "all_on": {on}
+    },
+    "type": "{type}",
+    "class": "{class}",
+    "name": "{name}"
+}
