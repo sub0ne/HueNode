@@ -200,8 +200,8 @@ class Hue {
 
     /**
      * decrypt deviceID from encoded string (CURRENTLY NOT USED)
-     * @param {*} encodedDeviceID 
-     * @param {*} deviceName 
+     * @param {string} encodedDeviceID 
+     * @param {string} deviceName 
      */
     _decodeDeviceID(encodedDeviceID, deviceName) {
         const keyHex = CryptoJS.enc.Utf8.parse(deviceName);
@@ -218,6 +218,9 @@ class Hue {
     }
 
 
+
+
+
     _loadGroups() {
 
         global.getHueNodeService().Logger.info(`[Hue Emulator] Loading groups`);
@@ -228,7 +231,7 @@ class Hue {
         let groups = this._getJSONGroups();;
         if (!groups) {
             groups = {};
-            updateDevices = true;
+            updateGroups = true;
         }
 
         // load lights
@@ -281,6 +284,15 @@ class Hue {
 
     getGroup(groupID) {
         return this._groups[groupID];
+    }
+
+
+    _saveGroups(groups) {
+        global.getHueNodeService().Logger.info(`[Hue Emulator] Updating group file: ${this._getGroupsFilePath()}`);
+
+        const data = new Uint8Array(Buffer.from(JSON.stringify(groups, null, 1)));
+
+        fs.writeFile(this._getGroupsFilePath(), data, () => { });
     }
 
 }
