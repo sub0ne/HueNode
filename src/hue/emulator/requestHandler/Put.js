@@ -1,5 +1,5 @@
 const URLParser = require('./URLParser.js');
-const Lights = require('../api/Lights.js');
+const Lights = require('./api/Lights.js');
 
 const PATTERN_LIGHT_STATE = "/api/:username/lights/:deviceID/state";
 

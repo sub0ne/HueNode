@@ -105,12 +105,12 @@ class Lights {
     }
 
     /**
-     * get device template path '<APP_ROOT>/templates/devices/<templateType>'
+     * get device template path '<APP_ROOT>/templates/objects/<templateType>'
      * @param {string} deviceType 
      */
     static _getDeviceTemplateFilePath(deviceType) {
         const templateFileName = `${deviceType.replace(/\s/gm, "_")}.json`;
-        return path.join(APP_ROOT, "templates", "devices", templateFileName);
+        return path.join(APP_ROOT, "templates", "objects", templateFileName);
     }
 
 }

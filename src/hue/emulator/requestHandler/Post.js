@@ -1,5 +1,5 @@
 const URLParser = require('./URLParser.js');
-const Users = require ('../api/Users.js');
+const Users = require ('./api/Users.js');
 
 const PATTERN_API = "/api";
 

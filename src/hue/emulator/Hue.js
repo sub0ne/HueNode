@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const CryptoJS = require('crypto-js');
 const HueServer = require('./HueServer.js');
-const Light = require('../device/Light.js');
-const Group = require('../device/Group.js');
+const Light = require('../objects/Light.js');
+const Group = require('../objects/Group.js');
 
 const APP_ROOT = path.dirname(require.main.filename);
 const DATA_FOLDER = "data";

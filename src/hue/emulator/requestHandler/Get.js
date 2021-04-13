@@ -1,8 +1,8 @@
-const Description = require('../api/Description.js');
-const Config = require('../api/Config.js');
-const Lights = require('../api/Lights.js');
-const Groups = require('../api/Groups.js');
-const Users = require('../api/Users.js');
+const Description = require('./api/Description.js');
+const Config = require('./api/Config.js');
+const Lights = require('./api/Lights.js');
+const Groups = require('./api/Groups.js');
+const Users = require('./api/Users.js');
 const URLParser = require('./URLParser.js');
 
 const PATTERN_DESCRIPTION = "/description.xml";

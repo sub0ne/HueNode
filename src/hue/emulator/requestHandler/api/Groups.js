@@ -80,10 +80,10 @@ class Groups {
     }
 
     /**
-     * get group template path '<APP_ROOT>/templates/devices/group.json'
+     * get group template path '<APP_ROOT>/templates/objects/group.json'
      */
     static _getGroupTemplateFilePath() {
-        return path.join(APP_ROOT, "templates", "devices", "group.json");
+        return path.join(APP_ROOT, "templates", "objects", "group.json");
     }
 
 }
