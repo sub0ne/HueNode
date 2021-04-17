@@ -20,7 +20,7 @@ class Groups {
             const groupID = group.getGroupID();
 
             if (!result[groupID]) {
-                result[groupID] = this._getJSONGroupDescription(group);
+                result[groupID] = this._getGroupDescription(group);
             } else {
                 global.getHueNodeService().Logger.info(`[Hue Emulator] Duplicate group ID detected: ${groupID}`);
             }
@@ -42,7 +42,7 @@ class Groups {
         const group = hue.getGroup(groupID);
 
         if (group) {
-            return this._getJSONGroupDescription(group);
+            return this._getGroupDescription(group);
         } else {
             global.getHueNodeService().Logger.error(`[Hue API Groups] Group with ID '${groupID}' not found`);
             throw new Error();
@@ -56,7 +56,7 @@ class Groups {
      * 
      * @param {Object} group 
      */
-    static _getJSONGroupDescription(group) {
+    static _getGroupDescription(group) {
 
         const hueNodeService = global.getHueNodeService();
 

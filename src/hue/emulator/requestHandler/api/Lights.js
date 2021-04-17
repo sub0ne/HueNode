@@ -20,7 +20,7 @@ class Lights {
             const deviceID = device.getDeviceID();
 
             if (!lights[deviceID])  {
-                lights[deviceID] = this._getJSONDeviceDescription(device);
+                lights[deviceID] = this._getDeviceDescription(device);
             } else {
                 global.getHueNodeService().Logger.info(`[Hue Emulator] Duplicate device ID detected: ${deviceID}`);    
             }        
@@ -39,7 +39,7 @@ class Lights {
         const lightDevice = hue.getLight(deviceID);
 
         if (lightDevice) {
-            return this._getJSONDeviceDescription(lightDevice);
+            return this._getDeviceDescription(lightDevice);
         } else {
             global.getHueNodeService().Logger.error(`[Hue API Lights] Light with ID '${deviceID}' not found`);
             throw new Error();
@@ -83,7 +83,7 @@ class Lights {
      * 
      * @param {Object} device 
      */
-    static _getJSONDeviceDescription(device) {
+    static _getDeviceDescription(device) {
 
         const hueNodeService = global.getHueNodeService();
 
