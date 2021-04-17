@@ -34,7 +34,7 @@ const handleGet = (request, response) => {
         // /api/:username/config
     } else if (URLParser.matchesPattern(url, PATTERN_CONFIG)) {
 
-        const responseData = Config.getJSONConfig();
+        const responseData = Config.getConfig();
 
         response.status(200);
         response.type('application/json');

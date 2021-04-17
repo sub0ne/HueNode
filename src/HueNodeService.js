@@ -7,6 +7,7 @@ const TemplateProcessor = require('./templates/TemplateProcessor.js');
 let hueConfigInstance = undefined;
 let hueInstance = undefined;
 let upnpServerInstance = undefined;
+let templateProcessorInstance = undefined;
 
 class HueNodeService {
 
@@ -54,7 +55,12 @@ class HueNodeService {
      * getter for TemplateProcessor
      */
     getTemplateProcessor() {
-        return TemplateProcessor;
+
+        if (!templateProcessorInstance) {
+            templateProcessorInstance = new TemplateProcessor();
+        }
+
+        return templateProcessorInstance;
     }
 
 }

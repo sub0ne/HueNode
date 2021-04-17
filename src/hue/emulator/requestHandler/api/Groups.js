@@ -60,11 +60,7 @@ class Groups {
 
         const hueNodeService = global.getHueNodeService();
 
-        const groupTemplateFilePath = this._getGroupTemplateFilePath();
-
-        hueNodeService.Logger.info(`[Hue API Groups] Loading group template for 'group': ${groupTemplateFilePath}`);
-
-        let template = fs.readFileSync(groupTemplateFilePath, "utf8");
+        hueNodeService.Logger.info(`[Hue API Groups] Get group template`);
 
         // set parameters for template
         const parameters = {
@@ -75,15 +71,8 @@ class Groups {
             name: group.getName()
         }
 
-        return JSON.parse(hueNodeService.getTemplateProcessor().setParameters(template, parameters));
+        return hueNodeService.getTemplateProcessor().getObjectDescription('group', parameters);
 
-    }
-
-    /**
-     * get group template path '<APP_ROOT>/templates/objects/group.json'
-     */
-    static _getGroupTemplateFilePath() {
-        return path.join(APP_ROOT, "templates", "objects", "group.json");
     }
 
 }

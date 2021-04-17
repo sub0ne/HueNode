@@ -39,7 +39,7 @@ class Users {
         }
 
         // add 'nouser_config.json'
-        responseData.config = Config.getJSONConfig();
+        responseData.config = Config.getConfig();
 
         return responseData;
 

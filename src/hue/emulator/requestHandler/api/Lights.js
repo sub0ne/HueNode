@@ -87,12 +87,8 @@ class Lights {
 
         const hueNodeService = global.getHueNodeService();
 
-        const deviceTemplateFilePath = this._getDeviceTemplateFilePath(device.getTemplateType());
-
-        hueNodeService.Logger.info(`[Hue API Lights] Loading device template for '${device.getTemplateType()}': ${deviceTemplateFilePath}`);
-        
-        let template = fs.readFileSync(deviceTemplateFilePath, "utf8");
-     
+        hueNodeService.Logger.info(`[Hue API Lights] Get device template for '${device.getTemplateType()}'`);
+             
         // set parameters for template
         const parameters = {
             on: device.getState("on"),
@@ -100,18 +96,10 @@ class Lights {
             uniqueID: device.getUniqueID()
         }
 
-        return JSON.parse(hueNodeService.getTemplateProcessor().setParameters(template, parameters));
+        return hueNodeService.getTemplateProcessor().getObjectDescription(device.getTemplateType(), parameters);
 
     }
 
-    /**
-     * get device template path '<APP_ROOT>/templates/objects/<templateType>'
-     * @param {string} deviceType 
-     */
-    static _getDeviceTemplateFilePath(deviceType) {
-        const templateFileName = `${deviceType.replace(/\s/gm, "_")}.json`;
-        return path.join(APP_ROOT, "templates", "objects", templateFileName);
-    }
 
 }
 

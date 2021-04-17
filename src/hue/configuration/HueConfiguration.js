@@ -4,15 +4,13 @@ const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
 const determineIPAddress = require('./determineIPAddress.js');
 
-const HUE_BRIDGE_TEMPLATE_FILE = "HueBridge.xml";
-const NOUSER_CONFIG_FILE = "nouser_config.json";
 const APP_ROOT = path.dirname(require.main.filename);
 const DATA_FOLDER = "data";
 const HUE_CONFIGURATION_FILE = "Configuration.json";
 
 class HueConfiguration {
 
-    constructor() {         
+    constructor() {
     }
 
     /**
@@ -31,7 +29,7 @@ class HueConfiguration {
      * try to determine the IP address of the host
      */
     async _determineIPAddress() {
-        
+
         if (!!this.getIPAddress()) {
             global.getHueNodeService().Logger.info(`[Hue Configuration] IP address set to ${this.getIPAddress()} due to 'Configuration.json'`);
             return;
@@ -46,7 +44,7 @@ class HueConfiguration {
             global.getHueNodeService().Logger.info(`[Hue Configuration] IP address could not be determined`);
             throw new Error("IP address could not be determined");
         }
-        
+
         // set the IP address
         this._setIPAddress(ipAddresses[0]);
 
@@ -55,12 +53,11 @@ class HueConfiguration {
     /**
      * get the HueBridge Description  ('HueBridge.xml') aka Description.xml as string
      */
-    getSerializedHueBridgeDescription() {
+    getHueBridgeDescription() {
 
         const hueNodeService = global.getHueNodeService();
 
-        hueNodeService.Logger.info(`[Hue Configuration] Loading hue bridge template: ${this._getHueBridgeTemplatePath()}`);
-        let template = fs.readFileSync(this._getHueBridgeTemplatePath(), "utf8");
+        hueNodeService.Logger.info(`[Hue Configuration] Get hue bridge info`);
 
         // set parameters for Description.xml
         const parameters = {
@@ -70,7 +67,7 @@ class HueConfiguration {
             modelID: this.getModelID()
         }
 
-        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
+        return hueNodeService.getTemplateProcessor().getHueBridgeInfo(parameters);
     }
 
     /**
@@ -101,7 +98,7 @@ class HueConfiguration {
      * load 'Configuration.json'
      */
     _loadConfiguration() {
-        global.getHueNodeService().Logger.info(`[Hue Configuration] Loading configuration file: ${this._getConfigurationFilePath()}`);    
+        global.getHueNodeService().Logger.info(`[Hue Configuration] Loading configuration file: ${this._getConfigurationFilePath()}`);
 
         this._configuration = JSON.parse(fs.readFileSync(this._getConfigurationFilePath()));
 
@@ -114,8 +111,8 @@ class HueConfiguration {
         global.getHueNodeService().Logger.info(`[Hue Configuration] Save configuration file: ${this._getConfigurationFilePath()}`);
 
         const data = new Uint8Array(Buffer.from(JSON.stringify(this._configuration, null, 1)));
-        
-        fs.writeFile(this._getConfigurationFilePath(), data, () => {});
+
+        fs.writeFile(this._getConfigurationFilePath(), data, () => { });
 
     }
 
@@ -124,20 +121,20 @@ class HueConfiguration {
      */
     _setupNewConfiguration() {
 
-        global.getHueNodeService().Logger.info(`[Hue Configuration] Create new hue configuration`);    
+        global.getHueNodeService().Logger.info(`[Hue Configuration] Create new hue configuration`);
 
         // e.g. da339446-ecab-4385-8f61-933ba188f810
         const uuid = uuidv4();;
 
         // e.g. 933ba188f810
         const serialNumber = uuid.split('-')[4];
-        
+
         this._configuration = {
             name: 'HueNode Hue',
             uuid,
             serialNumber,
             modelID: "BSB002"
-        }        
+        }
     }
 
     /**
@@ -151,20 +148,14 @@ class HueConfiguration {
      * getter for 'Configuration.json' path ('<APP_ROOT>/data/Configuration.json')
      */
     _getConfigurationFilePath() {
-         return path.join(this._getDataFolderPath(), HUE_CONFIGURATION_FILE);
+        return path.join(this._getDataFolderPath(), HUE_CONFIGURATION_FILE);
     }
 
-    /**
-     * getter for 'HueBridge.xml' template path
-     */
-    _getHueBridgeTemplatePath() {
-        return path.join(APP_ROOT, "templates", HUE_BRIDGE_TEMPLATE_FILE);
-    }
 
     /**
      * getter for uuid
      */
-    getUUID(){
+    getUUID() {
         return this._getConfiguration().uuid;
     }
 
@@ -199,16 +190,16 @@ class HueConfiguration {
      * getter for mac address which is derived from serialNumber
      */
     getMacAddress() {
- 
+
         // e.g. 933ba188f810
         const serialNumber = this.getSerialNumber().toUpperCase();
 
         const keySegments = [];
 
         for (let i = 0; i <= 5; i++) {
-            keySegments.push(serialNumber.substring(i*2, i*2 + 2));
+            keySegments.push(serialNumber.substring(i * 2, i * 2 + 2));
         }
-             
+
         // e.g. 93:3b:a1:88:f8:10
         return keySegments.join(":");
 
@@ -244,13 +235,12 @@ class HueConfiguration {
     /**
      * get 'nouser_config.json' as serialized string
      */
-    getSerializedNoUserConfig() {
+    getNoUserConfig() {
 
         const hueNodeService = global.getHueNodeService();
 
-        hueNodeService.Logger.info(`[Hue Configuration] Loading nouser config template: ${this._getNoUserConfigTemplatePath()}`);            
-        let template = fs.readFileSync(this._getNoUserConfigTemplatePath(), "utf8");
- 
+        hueNodeService.Logger.info(`[Hue Configuration] Get nouser config`);
+
         const time = this.getTime();
 
         // set parameters for 'nouser_config.json'
@@ -265,20 +255,13 @@ class HueConfiguration {
             modelID: this.getModelID()
         }
 
-        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
-    }
-
-    /**
-     * get 'nouser_config.json' template path
-     */
-    _getNoUserConfigTemplatePath() { 
-        return path.join(APP_ROOT, "templates", NOUSER_CONFIG_FILE);
+        return hueNodeService.getTemplateProcessor().getNoUserConfig(parameters);
     }
 
     /**
      * get modelID
      */
-    getModelID(){
+    getModelID() {
         return this._getConfiguration().modelID;
     }
 

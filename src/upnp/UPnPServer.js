@@ -1,12 +1,8 @@
 const dgram = require('dgram');
-const fs = require ('fs');
-const path = require ('path');
 const SSDPParser = require('./SSDPParser.js');
 
-const APP_ROOT = path.dirname(require.main.filename);
 const MULTICAST_ADDRESS = "239.255.255.250";
 const PORT = 1900;
-const UPNP_RESPONSE_TEMPLATE_FILE = "UPnPResponse";
 
 class UPnPServer {
 
@@ -84,13 +80,6 @@ class UPnPServer {
     }
 
     /**
-     * get the 'UPnPResponse'-Template path
-     */
-    _getUPnPResponseTemplatePath() {
-        return path.join(APP_ROOT, "templates", UPNP_RESPONSE_TEMPLATE_FILE);
-    }
-
-    /**
      * get the UPnPResponse
      */
     _getUPnPResponse() {
@@ -98,9 +87,6 @@ class UPnPServer {
         const hueNodeService = global.getHueNodeService();
 
         const hueConfiguration = hueNodeService.getHueConfiguration();
-
-        // read the template file
-        let template = fs.readFileSync(this._getUPnPResponseTemplatePath(), "utf8");
         
         // response parameters
         const parameters = {
@@ -108,8 +94,8 @@ class UPnPServer {
             ipAddress: hueConfiguration.getIPAddress()            
         }
 
-        // set parameters and return response
-        return hueNodeService.getTemplateProcessor().setParameters(template, parameters);
+        // get UPnPResponseparameters and return response
+        return hueNodeService.getTemplateProcessor().getUPnPResponse(parameters);
 
     }
 
