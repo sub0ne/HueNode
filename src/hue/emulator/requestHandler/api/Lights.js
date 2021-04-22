@@ -92,6 +92,7 @@ class Lights {
         // set parameters for template
         const parameters = {
             on: device.getState("on"),
+            bri: device.getState("bri"),
             name: device.getName(),
             uniqueID: device.getUniqueID()
         }

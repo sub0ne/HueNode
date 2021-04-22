@@ -33,6 +33,9 @@ class BaseDevice {
         this._templateType = parameters.templateType;
         this._name = parameters.name;
         this._uniqueID = parameters.uniqueID;
+        
+        this._stateChangeHandler = parameters.stateChangeHandler;
+
     }
 
     /**
@@ -74,6 +77,7 @@ class BaseDevice {
 
         if (this.hasOwnProperty(propertyName)) {
             this[propertyName] = value;
+            this._executeStateChangeHandler(state, value);
             return true;
         } else {
             return false;
@@ -94,6 +98,36 @@ class BaseDevice {
         } else {
             return undefined;
         }
+
+    }
+
+    /**
+     * execute registered state change handler
+     */
+    _executeStateChangeHandler(state, value) {
+
+        if (!this._stateChangeHandler) {
+            return;
+        }
+
+        const definedHandler = this._stateChangeHandler[state];
+
+        if (!definedHandler) {
+            return;
+        }
+
+        definedHandler.forEach(definition => {
+
+            global.getHueNodeService().Logger.info(`[Hue Device] Executing Handler '${definition.type}'.`);
+
+            try {
+            const handler = require(`../emulator/stateChangeHandler/${definition.type}`);
+            handler.stateChanged(this, state, value);
+            } catch (ex) {
+                global.getHueNodeService().Logger.info(`[Hue Device] Handler '${definition.type}' not executed.`);
+            }
+
+        });
 
     }
 
