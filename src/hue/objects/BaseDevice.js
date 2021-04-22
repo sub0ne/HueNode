@@ -15,6 +15,15 @@ class BaseDevice {
                 case "boolean":
                     this[`_${property}`] = false;
                     break;
+                case "object":
+                    this[`_${property}`] = undefined;
+                    break;
+                case "string":
+                    this[`_${property}`] = "";
+                    break;
+                case "number":
+                    this[`_${property}`] = 0;
+                    break;
                 default:
             }
             

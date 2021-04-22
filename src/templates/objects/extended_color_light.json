@@ -2,6 +2,11 @@
     "state": {
         "on": {on},
         "bri": {bri},
+        "hue": {hue},
+        "sat": {sat},
+        "ct": {ct},
+        "xy": {xy},
+        "colormode": {colormode},
         "alert": "select",
         "reachable": true
     },
@@ -9,7 +14,7 @@
         "state": "notupdatable",
         "lastinstall": "2020-11-05T18:37:08"
     },
-    "type": "Dimmable light",
+    "type": "Extended color light",
     "name": "{name}",
     "modelid": "SP 120",
     "manufacturername": "innr",

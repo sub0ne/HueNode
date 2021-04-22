@@ -4,7 +4,13 @@ class Light extends BaseDevice {
 
     static metadata = {
         properties: {
-            on: {type: "boolean"}
+            on: {type: "boolean"},
+            bri: {type: "number"},
+            hue: {type: "number"},
+            sat: {type: "number"},
+            ct: {type: "number"},
+            xy: {type: "object"},
+            colormode: {type: "string"}
         }
     };
 
