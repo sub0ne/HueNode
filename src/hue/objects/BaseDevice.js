@@ -119,21 +119,17 @@ class BaseDevice {
 
     }
 
-
+    /**
+     * get light parameters
+     */
     getParameters() {
 
         const parameters = {};
 
         for (let property in this._metadata.properties) {
 
-            const value = this.getState(property);
-        
-            // TODO: TEMPORARY WORKAROUND
-            if (Array.isArray(value)) {
-                parameters[property] = JSON.stringify(value);
-            } else {
-                parameters[property] = value;
-            }
+            parameters[property] = this.getState(property);
+
         }
 
         return parameters;

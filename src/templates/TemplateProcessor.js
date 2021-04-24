@@ -22,7 +22,7 @@ class TemplateProcessor {
         const objectTemplateFilePath = this._getObjectTemplateFilePath(object);
 
         let template = fs.readFileSync(objectTemplateFilePath, "utf8");
-        return JSON.parse(this._setParameters(template, parameters));
+        return JSON.parse(this._setParameters(template, this._prepareParameters(parameters)));
 
     }
 
@@ -111,6 +111,26 @@ class TemplateProcessor {
      */
     _getHueBridgeTemplatePath() {
         return path.join(__dirname, HUE_BRIDGE_TEMPLATE_FILE);
+    }
+
+    /**
+     * prepare the parameters for JSON usage
+     */
+    _prepareParameters(parameters) {
+  
+        for (let property in parameters) {
+
+            const value = parameters[property];
+        
+            // TODO: TEMPORARY WORKAROUND
+            if (Array.isArray(value)) {
+                parameters[property] = JSON.stringify(value);
+            } else {
+                parameters[property] = value;
+            }
+        }
+
+        return parameters;
     }
 
 }

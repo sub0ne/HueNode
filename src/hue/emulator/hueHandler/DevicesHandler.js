@@ -166,7 +166,9 @@ class DevicesHandler extends BaseHandler {
         return this._lights[deviceID];
     }
 
-
+    /**
+     * Factory method for light objects
+     */
     _createLightInstance(lightData) {
 
         switch (lightData.templateType) {
