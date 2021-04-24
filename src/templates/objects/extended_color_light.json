@@ -6,7 +6,7 @@
         "sat": {sat},
         "ct": {ct},
         "xy": {xy},
-        "colormode": {colormode},
+        "colormode": "{colormode}",
         "alert": "select",
         "reachable": true
     },

@@ -11,30 +11,18 @@ class BaseDevice {
 
             const typeDescription = metadata.properties[property];
 
-            switch (typeDescription.type) {
-                case "boolean":
-                    this[`_${property}`] = false;
-                    break;
-                case "object":
-                    this[`_${property}`] = undefined;
-                    break;
-                case "string":
-                    this[`_${property}`] = "";
-                    break;
-                case "number":
-                    this[`_${property}`] = 0;
-                    break;
-                default:
-            }
-            
+            this[`_${property}`] = typeDescription.defaultValue;
+
         }
 
         this._deviceID = parameters.deviceID;
         this._templateType = parameters.templateType;
         this._name = parameters.name;
         this._uniqueID = parameters.uniqueID;
-        
+
         this._stateChangeHandler = parameters.stateChangeHandler;
+
+        this._metadata = metadata;
 
     }
 
@@ -121,8 +109,8 @@ class BaseDevice {
             global.getHueNodeService().Logger.info(`[Hue Device] Executing Handler '${definition.type}'.`);
 
             try {
-            const handler = require(`../emulator/stateChangeHandler/${definition.type}`);
-            handler.stateChanged(this, state, value);
+                const handler = require(`../emulator/stateChangeHandler/${definition.type}`);
+                handler.stateChanged(this, state, value);
             } catch (ex) {
                 global.getHueNodeService().Logger.info(`[Hue Device] Handler '${definition.type}' not executed.`);
             }
@@ -131,6 +119,25 @@ class BaseDevice {
 
     }
 
+
+    getParameters() {
+
+        const parameters = {};
+
+        for (let property in this._metadata.properties) {
+
+            const value = this.getState(property);
+        
+            // TODO: TEMPORARY WORKAROUND
+            if (Array.isArray(value)) {
+                parameters[property] = JSON.stringify(value);
+            } else {
+                parameters[property] = value;
+            }
+        }
+
+        return parameters;
+    }
 }
 
 module.exports = BaseDevice;

@@ -2,11 +2,12 @@ const BaseHandler = require('./BaseHandler');
 
 const fs = require('fs');
 const path = require('path');
-const Light = require('../../objects/Light.js');
+const DimmableLight = require('../../objects/DimmableLight');
+const ExtendedColorLight = require('../../objects/ExtendedColorLight');
 
 const DEVICES_FILE = "Devices.json";
 
-class DevicesHandler extends BaseHandler{
+class DevicesHandler extends BaseHandler {
 
     /**
      * create light objects from '<APP_ROOT>/data/Devices.json' definition
@@ -20,13 +21,13 @@ class DevicesHandler extends BaseHandler{
 
         let deviceUpdated = false;
 
-        this._lights = lights.reduce((lights, light) => {
-            if (!light.uniqueID) {
-                light.uniqueID = this._generateUniqueID(light.deviceID, light.name);
+        this._lights = lights.reduce((lights, lightData) => {
+            if (!lightData.uniqueID) {
+                lightData.uniqueID = this._generateUniqueID(lightData.deviceID, lightData.name);
                 deviceUpdated = true;
             }
 
-            lights[light.deviceID] = new Light(light);
+            lights[lightData.deviceID] = this._createLightInstance(lightData);
 
             return lights;
         }, {});
@@ -83,7 +84,7 @@ class DevicesHandler extends BaseHandler{
      * @param {*} devices 
      */
     _saveDevices(devices) {
-        global.getHueNodeService().Logger.info(`[Hue Emulator] Updating device file: ${this._getDevicesFilePath()}`);
+        global.getHueNodeService().Logger.info(`[Hue Device Handler] Updating device file: ${this._getDevicesFilePath()}`);
 
         const data = new Uint8Array(Buffer.from(JSON.stringify(devices, null, 1)));
 
@@ -166,6 +167,18 @@ class DevicesHandler extends BaseHandler{
     }
 
 
+    _createLightInstance(lightData) {
+
+        switch (lightData.templateType) {
+            case 'dimmable_light':
+                return new DimmableLight(lightData);
+            case 'extended_color_light':
+                return new ExtendedColorLight(lightData);
+            default:
+                global.getHueNodeService().Logger.info(`[Hue Device Handler] Unknown light type '${lightData.templateType}'`);
+        }
+
+    }
 
 }
 
