@@ -152,7 +152,7 @@ Parameters of a group device:
                 "on": [
                     {
                         "type": "httpRequest",
-                        "url": "http://pi-home/....{bri}...{sat}"
+                        "url": "http://www.google.de?bri={bri}&sat={sat}"
                     }
                 ]
             }

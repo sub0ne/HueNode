@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const forge = require('node-forge');
 const moment = require('moment');
+const RSA = require('./RSA');
 const { v4: uuidv4 } = require('uuid');
 const determineIPAddress = require('./determineIPAddress.js');
 
@@ -129,12 +131,20 @@ class HueConfiguration {
         // e.g. 933ba188f810
         const serialNumber = uuid.split('-')[4];
 
+        // generate private and public keys
+        const keys = RSA.generateKeys();
+
         this._configuration = {
             name: 'HueNode Hue',
             uuid,
             serialNumber,
-            modelID: "BSB002"
+            modelID: "BSB002",
+            keys
         }
+
+        // this must be executed after this._configuration is set, as this.getBridgeID() needs the configuration
+        keys.certificate = RSA.generateCertificate(this.getPrivateKey(), this.getPublicKey(), this.getBridgeID());
+
     }
 
     /**
@@ -263,6 +273,41 @@ class HueConfiguration {
      */
     getModelID() {
         return this._getConfiguration().modelID;
+    }
+
+    /**
+     * getter for public key
+     */
+    getPublicKey() {
+
+        global.getHueNodeService().Logger.info(`[Hue Configuration] Getting public key`);
+
+        const pki = forge.pki;
+
+        return pki.publicKeyFromPem(this._getConfiguration().keys.publicKey);
+    }
+
+    /**
+     * getter for private key
+     */
+    getPrivateKey() {
+
+        global.getHueNodeService().Logger.info(`[Hue Configuration] Getting private key`);
+
+        const pki = forge.pki;
+
+        return pki.privateKeyFromPem(this._getConfiguration().keys.privateKey);
+    }
+
+    /**
+     * getter for the certificate
+     */
+    getCertificate() {
+
+        const pki = forge.pki;
+
+        return pki.certificateFromPem(this._getConfiguration().keys.certificate);
+
     }
 
 }

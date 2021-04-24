@@ -21,7 +21,7 @@ class HueServer {
         if (this._httpServer) {
             this._httpServer.close();
             global.getHueNodeService().Logger.info(`[Hue Server] Stopped`);
-            
+
             this._httpServer = undefined;
         }
     }
@@ -30,7 +30,7 @@ class HueServer {
      * start hue http/https server
      */
     startServer() {
-        
+
         const app = express();
 
         global.getHueNodeService().Logger.info(`[Hue Server] Starting`);
@@ -39,9 +39,9 @@ class HueServer {
         app.use(bodyParser.json());
 
         // register handlers
-        app.get('/*', (req, res) => getHandler.handleGet(req,res));
-        app.post('/*', (req, res) => postHandler.handlePost(req,res));
-        app.put('/*', (req, res) => putHandler.handlePut(req,res));
+        app.get('/*', (req, res) => getHandler.handleGet(req, res));
+        app.post('/*', (req, res) => postHandler.handlePost(req, res));
+        app.put('/*', (req, res) => putHandler.handlePut(req, res));
         app.delete('/*', (req, res) => deleteHandler(req, res));
 
         // used ports
@@ -67,54 +67,20 @@ class HueServer {
     }
 
     /**
-     * create self signed certificate for https communication
+     * get certificate for https communication
      */
-    _getCredentials(){
+    _getCredentials() {
 
         const pki = forge.pki;
-        const keys = pki.rsa.generateKeyPair(2048); // create keys
-        
-        const cert = forge.pki.createCertificate(); // create certificate
-        cert.publicKey = keys.publicKey; // set certificates public key
 
-        const bridgeID = global.getHueNodeService().getHueConfiguration().getBridgeID().toLowerCase();
+        const privateKeyPem = pki.privateKeyToPem(global.getHueNodeService().getHueConfiguration().getPrivateKey());
+        const certificatePem = pki.certificateToPem(global.getHueNodeService().getHueConfiguration().getCertificate());
 
-        cert.validity.notBefore = new Date();
-
-        // certificate is valid for 30 days
-        var validUntil = new Date();
-        validUntil.setDate(validUntil.getDate() + 30);
-        cert.validity.notAfter = validUntil;
-
-        // attributes according to Hue API
-        const attrs = [{
-            name: 'countryName',
-            value: 'NL'
-          }, {
-            name: 'organizationName',
-            value: 'Philips Hue'
-          }, {
-            name: 'commonName',
-            value: bridgeID
-          }
-        ];
-        cert.setSubject(attrs); // set subject attributes
-        cert.setIssuer(attrs);  // set issues attributes
-        
-        // sign the certificate with the private key
-        cert.sign(keys.privateKey); 
-
-        // pem 
-        const privateKey = pki.privateKeyToPem(keys.privateKey); 
-        const certificate = pki.certificateToPem(cert); 
-        
-        const credentials = {
-             key: privateKey, 
-             cert: certificate}
-        ;
-
-        return credentials;
-
+        return {
+            key: privateKeyPem,
+            cert: certificatePem
+        }
+            ;
     }
 
 }
