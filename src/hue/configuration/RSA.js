@@ -32,6 +32,8 @@ const RSA = {
         cert.setSubject(attrs); // set subject attributes
         cert.setIssuer(attrs);  // set issues attributes
 
+        cert.serialNumber = `00${bridgeID}`;
+
         // sign the certificate with the private key
         cert.sign(privateKey);
 
