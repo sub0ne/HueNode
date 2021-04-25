@@ -1,8 +1,8 @@
 
 const StateChangeHandler = {
 
-    stateChanged(device, state, value) {
-
+    stateChanged(device, state, value, parameters) {
+        
         console.log(`Example state changed: ${state}, value: ${value}`);
 
     }

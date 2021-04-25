@@ -110,7 +110,7 @@ class BaseDevice {
 
             try {
                 const handler = require(`../emulator/stateChangeHandler/${definition.type}`);
-                handler.stateChanged(this, state, value);
+                handler.stateChanged(this, state, value, definition);
             } catch (ex) {
                 global.getHueNodeService().Logger.info(`[Hue Device] Handler '${definition.type}' not executed.`);
             }
