@@ -22,6 +22,12 @@ const StateChangeHandler = {
             case 'xy':
                 url = this._processXy(state, value, parameters);
                 break;
+            case 'sat':
+                url = this._processSat(state, value, parameters);
+                break;
+            case 'hue':
+                url = this._processHue(state, value, parameters);
+                break;
             default:
                 global.getHueNodeService().Logger.info(`[httpRequest State Handler] State '${state}' not processed`);
         }
@@ -49,6 +55,21 @@ const StateChangeHandler = {
     },
 
     _processXy(state, value, parameters) {
+        return this._processState(state, value, parameters);
+    },
+
+    _processHue(state, value, parameters) {
+
+        const deg = 360 / 65535;
+        const hue = parseFloat(value);
+
+        const hueDeg = (hue * deg).toFixed(2);
+
+        return this._processState(state, hueDeg, parameters);
+
+    },
+
+    _processSat(state, value, parameters) {
         return this._processState(state, value, parameters);
     },
 
