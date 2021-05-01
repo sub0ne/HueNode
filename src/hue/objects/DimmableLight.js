@@ -6,7 +6,7 @@ class DimmableLight extends BaseDevice {
     static metadata = {
         properties: {
             on: {type: "boolean", defaultValue: false},
-            bri: {type: "number", defaultValue: 0}
+            bri: {type: "number", defaultValue: 1}
         }
     };
 
