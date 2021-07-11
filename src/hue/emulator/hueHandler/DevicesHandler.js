@@ -17,6 +17,7 @@ class DevicesHandler extends BaseHandler {
     _createLights(lights) {
 
         if (!lights) {
+            this._lights = [];
             return;
         }
 
