@@ -1,5 +1,5 @@
 const Logger = require('./Logger.js');
-const HueConfiguration = require('./hue/configuration/Hueconfiguration.js');
+const HueConfiguration = require('./hue/configuration/HueConfiguration.js');
 const Hue = require('./hue/emulator/Hue.js');
 const UPnPServer = require('./upnp/UPnPServer.js');
 const TemplateProcessor = require('./templates/TemplateProcessor.js');
