@@ -3,27 +3,18 @@ var path = require('path');
 
 class Logger {
 
-    static _logger;
-
     /**
      * get Logger instance
      */
     static getLogger(logLevel) {
-
-        if (!Logger._logger) {
-            Logger._initializeLogger(logLevel);
-        }
-
-        return Logger._logger;
-
+        return Logger._initializeLogger(logLevel);
     }
 
     /**
      * initialize the Logger instance
      */
     static _initializeLogger(logLevel) {
-        if (!Logger._logger) {
-            this._logger = winston.createLogger({
+        return winston.createLogger({
                 level: logLevel || 'info',
                 format: winston.format.combine(
                     winston.format.label({ label: '[HueNode]' }),
@@ -38,7 +29,6 @@ class Logger {
                     new winston.transports.File({ filename: path.join(__dirname, 'HueNode.log') })
                 ]
             });
-        }
     }
 
 }

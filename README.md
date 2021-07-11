@@ -35,6 +35,15 @@ The file 'Configuration.json' is basically created on first run and does not nee
     "uuid"              a genereated uuid of the Hue instance
     "serialNumber"      a generated serial number of the Hue instance
     "modelID"           the model ID of the Hue instance, default is "BSB002"
+    "logLevel"          log level for output/log file in ascending order:
+                            emerg
+                            alert
+                            crit
+                            error
+                            warning
+                            notice
+                            info 
+                            debug
     
 ## 2.2 Devices
 
@@ -134,7 +143,8 @@ Parameters of a group device:
     "name": "HueNode Hue",
     "uuid": "da339446-ecab-4385-8f61-933ba188f810",
     "serialNumber": "933ba188f810",
-    "modelID": "BSB002"
+    "modelID": "BSB002",
+     "logLevel": "crit"
 }
 ```
 

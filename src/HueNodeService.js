@@ -63,6 +63,16 @@ class HueNodeService {
         return templateProcessorInstance;
     }
 
+    /**
+     * set log level to configured log level after emulator startup
+     */
+    setLoggerToLogLevel() {
+
+        if (this.getHueConfiguration().getLogLevel()) {
+            this.Logger = Logger.getLogger(this.getHueConfiguration().getLogLevel());
+        }
+    }
+
 }
 
 module.exports = HueNodeService;

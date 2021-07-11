@@ -310,6 +310,13 @@ class HueConfiguration {
 
     }
 
+    /**
+     * getter for log level
+     */
+    getLogLevel() {
+        return this._getConfiguration().logLevel;
+    }
+
 }
 
 module.exports = HueConfiguration;

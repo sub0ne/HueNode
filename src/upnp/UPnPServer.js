@@ -23,59 +23,65 @@ class UPnPServer {
     /**
      * start listening
      */
-    async startListening() {
-       
-        this._socket = dgram.createSocket('udp4');
+    startListening() {
 
-        this._socket.on('message', (message, requestInfo) => {
+        return new Promise((res) => {
 
-            const strMessage = message.toString().trim();
+            this._socket = dgram.createSocket('udp4');
 
-            // check if required SSDP request is received            
-            if (strMessage.includes('M-SEARCH * HTTP/1.1') &&
-                strMessage.includes(`HOST: ${MULTICAST_ADDRESS}:${PORT}`) &&
-                strMessage.includes('MAN: "ssdp:discover"') &&
-                strMessage.includes('ST: ssdp:all')) {
+            this._socket.on('message', (message, requestInfo) => {
 
-                global.getHueNodeService().Logger.info(`[UPnPServer] SSDP request received: ${strMessage}`);
+                const strMessage = message.toString().trim();
 
-                // get MX value from request
-                const ssdpParser = new SSDPParser(strMessage);
-                const mxValue = ssdpParser.getMX() || 0;
+                // check if required SSDP request is received            
+                if (strMessage.includes('M-SEARCH * HTTP/1.1') &&
+                    strMessage.includes(`HOST: ${MULTICAST_ADDRESS}:${PORT}`) &&
+                    strMessage.includes('MAN: "ssdp:discover"') &&
+                    strMessage.includes('ST: ssdp:all')) {
 
-                global.getHueNodeService().Logger.info(`[UPnPServer] Received MX value: ${mxValue}`);
+                    global.getHueNodeService().Logger.info(`[UPnPServer] SSDP request received: ${strMessage}`);
 
-                const strResponse = this._getUPnPResponse();
+                    // get MX value from request
+                    const ssdpParser = new SSDPParser(strMessage);
+                    const mxValue = ssdpParser.getMX() || 0;
 
-                const response = new Buffer(strResponse); // TODO: use Buffer.from()
+                    global.getHueNodeService().Logger.info(`[UPnPServer] Received MX value: ${mxValue}`);
 
-                // wait up to mxValue before sending the response
-                const mxTimeout = Math.floor(Math.random() * mxValue * 1000); 
+                    const strResponse = this._getUPnPResponse();
 
-                setTimeout(() => {
-                    this._socket.send(response,
-                        0, // Buffer offset
-                        response.length,
-                        requestInfo.port,
-                        requestInfo.address,
-                        (error, byteLength) => {                        
-                            global.getHueNodeService().Logger.info(`[UPnPServer] Sent response to ${requestInfo.address}:${requestInfo.port}`);                        
-                        }
-                    );
-                }, mxTimeout);
+                    const response = new Buffer(strResponse); // TODO: use Buffer.from()
 
-            }
+                    // wait up to mxValue before sending the response
+                    const mxTimeout = Math.floor(Math.random() * mxValue * 1000);
+
+                    setTimeout(() => {
+                        this._socket.send(response,
+                            0, // Buffer offset
+                            response.length,
+                            requestInfo.port,
+                            requestInfo.address,
+                            (error, byteLength) => {
+                                global.getHueNodeService().Logger.info(`[UPnPServer] Sent response to ${requestInfo.address}:${requestInfo.port}`);
+                            }
+                        );
+                    }, mxTimeout);
+
+                }
+
+            });
+
+            // bind socket
+            this._socket.bind(PORT, () => {
+
+                global.getHueNodeService().Logger.info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
+
+                // subscribe on 239.255.255.250
+                this._socket.addMembership(MULTICAST_ADDRESS);
+
+                res();
+            });
 
         });
-
-        // bind socket
-        this._socket.bind(PORT, () => {
-            
-            global.getHueNodeService().Logger.info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
-            
-            // subscribe on 239.255.255.250
-            this._socket.addMembership(MULTICAST_ADDRESS); 
-          });        
 
     }
 
@@ -83,15 +89,15 @@ class UPnPServer {
      * get the UPnPResponse
      */
     _getUPnPResponse() {
-        
+
         const hueNodeService = global.getHueNodeService();
 
         const hueConfiguration = hueNodeService.getHueConfiguration();
-        
+
         // response parameters
         const parameters = {
-            uuid: hueConfiguration.getUUID(),            
-            ipAddress: hueConfiguration.getIPAddress()            
+            uuid: hueConfiguration.getUUID(),
+            ipAddress: hueConfiguration.getIPAddress()
         }
 
         // get UPnPResponseparameters and return response

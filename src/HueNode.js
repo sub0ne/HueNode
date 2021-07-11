@@ -19,9 +19,13 @@ hueNodeService.getHueConfiguration().initialize().then(() => {
         process.exit();
     });
 
-    // start Hue server and UPnP server
-    upnpServer.startListening();
-    hue.startHue();
+    // start Hue server and UPnP server, when done set log level to configured one
+    Promise.all([
+        upnpServer.startListening(),
+        hue.startHue()
+    ]).then(() => {
+        hueNodeService.setLoggerToLogLevel();
+    });
 
 }).catch(() => {
 
