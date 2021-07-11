@@ -1,3 +1,4 @@
+const { rejects } = require('assert');
 const dgram = require('dgram');
 const SSDPParser = require('./SSDPParser.js');
 
@@ -25,15 +26,18 @@ class UPnPServer {
      */
     startListening() {
 
-        return new Promise((res) => {
+        return new Promise((res, rej) => {
 
-            this._socket = dgram.createSocket('udp4');
+            this._socket = dgram.createSocket({
+                type:"udp4",
+                reuseAddr:true
+            });
 
             this._socket.on('message', (message, requestInfo) => {
 
                 const strMessage = message.toString().trim();
 
-                // check if required SSDP request is received            
+                // check if required SSDP request is received
                 if (strMessage.includes('M-SEARCH * HTTP/1.1') &&
                     strMessage.includes(`HOST: ${MULTICAST_ADDRESS}:${PORT}`) &&
                     strMessage.includes('MAN: "ssdp:discover"') &&
@@ -67,6 +71,13 @@ class UPnPServer {
                     }, mxTimeout);
 
                 }
+
+            });
+
+            this._socket.on('error', (err) => {
+
+                global.getHueNodeService().Logger.error(`[UPnPServer] Socket bind to ${MULTICAST_ADDRESS}:${PORT} failed`);
+                rej();
 
             });
 
