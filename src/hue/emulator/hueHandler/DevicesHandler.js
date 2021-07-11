@@ -117,19 +117,18 @@ class DevicesHandler extends BaseHandler {
      * @param {string} key 
      */
     _encodeDeviceID(deviceID, deviceName) {
-
-        // create hex key from deviceName
-        const keyHex = CryptoJS.enc.Utf8.parse(deviceName);
-
-        // encrypt deviceID
-        const encrypted = CryptoJS.TripleDES.encrypt(deviceID, keyHex, {
+ 
+        const hash = CryptoJS.SHA256(deviceName);
+        const strHash = hash.toString(CryptoJS.enc.Hex);
+        const keyHex = CryptoJS.enc.Utf8.parse(strHash);
+    
+        var encrypted = CryptoJS.DES.encrypt(deviceID, keyHex, {
             mode: CryptoJS.mode.ECB,
             padding: CryptoJS.pad.Pkcs7
         });
-
-        // stringify the encrypted deviceID
+    
         const encryptedDeviceID = CryptoJS.enc.Hex.stringify(encrypted.ciphertext).toUpperCase();
-
+    
         return encryptedDeviceID;
     }
 
@@ -139,17 +138,20 @@ class DevicesHandler extends BaseHandler {
      * @param {string} deviceName 
      */
     _decodeDeviceID(encodedDeviceID, deviceName) {
-        const keyHex = CryptoJS.enc.Utf8.parse(deviceName);
-
-        const decrypted = CryptoJS.TripleDES.decrypt({
+        
+        const hash = CryptoJS.SHA256(deviceName);
+        const strHash = hash.toString(CryptoJS.enc.Hex);
+        const keyHex = CryptoJS.enc.Utf8.parse(strHash);
+    
+        // direct decrypt ciphertext
+        var decrypted = CryptoJS.DES.decrypt({
             ciphertext: CryptoJS.enc.Hex.parse(encodedDeviceID)
         }, keyHex, {
             mode: CryptoJS.mode.ECB,
             padding: CryptoJS.pad.Pkcs7
         });
-
+    
         return decrypted.toString(CryptoJS.enc.Utf8);
-
     }
 
     /**
