@@ -133,7 +133,7 @@ class DevicesHandler extends BaseHandler {
     }
 
     /**
-     * decrypt deviceID from encoded string (CURRENTLY NOT USED)
+     * decrypt deviceID from encoded string (CURRENTLY NOT IN USE)
      * @param {string} encodedDeviceID 
      * @param {string} deviceName 
      */
