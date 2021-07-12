@@ -12,14 +12,14 @@ class UPnPServer {
     }
 
     /**
-     * stop listening
+     * stop listening - OBSOLETE
      */
-    stopListening() {
+    /*stopListening() {
         if (this._socket) {
             global.getHueNodeService().Logger.info(`[UPnPServer] Stopped listening`);
             this._socket.close();
         }
-    }
+    }*/
 
     /**
      * start listening
@@ -82,7 +82,10 @@ class UPnPServer {
             });
 
             // bind socket
-            this._socket.bind(PORT, () => {
+            this._socket.bind({
+                port: PORT,
+                exclusive: false
+            }, () => {
 
                 global.getHueNodeService().Logger.info(`[UPnPServer] Listening to ${MULTICAST_ADDRESS}:${PORT}`);
 

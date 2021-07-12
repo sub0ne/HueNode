@@ -13,7 +13,6 @@ hueNodeService.getHueConfiguration().initialize().then(() => {
     const upnpServer = hueNodeService.getUPnPServer();
 
     const stopServices = () => {
-        upnpServer.stopListening();
         hue.stopHue();
         process.exit();
     };
