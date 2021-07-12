@@ -32,8 +32,9 @@ hueNodeService.getHueConfiguration().initialize().then(() => {
         upnpServer.startListening(),
         hue.startHue()
     ]).then(() => {
-        hueNodeService.setLoggerToLogLevel();
-    }).catch(() => {
+        hueNodeService.setLoggerToConfigLogLevel();
+    }).catch((err) => {
+        hueNodeService.Logger.error(`[HueNode] ${err.message}`);      
         stopServices();
     });
 

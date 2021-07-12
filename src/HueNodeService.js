@@ -66,7 +66,7 @@ class HueNodeService {
     /**
      * set log level to configured log level after emulator startup
      */
-    setLoggerToLogLevel() {
+    setLoggerToConfigLogLevel() {
 
         if (this.getHueConfiguration().getLogLevel()) {
             this.Logger = Logger.getLogger(this.getHueConfiguration().getLogLevel());
